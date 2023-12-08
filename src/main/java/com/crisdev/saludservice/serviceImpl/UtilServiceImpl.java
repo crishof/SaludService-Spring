@@ -40,12 +40,41 @@ public class UtilServiceImpl implements UtilService {
         }
     }
 
-    public Date formatearFecha(String fechaStr) throws ParseException {
+    public Date formatearFecha(String fechaStr) throws MiException {
 
         Date fecha;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        fecha = dateFormat.parse(fechaStr);
+        try {
+            fecha = dateFormat.parse(fechaStr);
+        } catch (ParseException e) {
+            throw new MiException("ERROR EN FORMATEAR FECHA " + e.getMessage());
+        }
         return fecha;
+    }
+
+    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, String email,
+                                String password, String password2) throws MiException {
+        if (nombre.isEmpty()) {
+            throw new MiException("El nombre no puede estar vacío");
+        }
+        if (apellido.isEmpty()) {
+            throw new MiException("El apellido no puede estar vacío");
+        }
+        if (dni == null) {
+            throw new MiException("El dni no puede estar vacío");
+        }
+        if (fecha.isEmpty()) {
+            throw new MiException("La fecha no puede estar vacía");
+        }
+        if (email.isEmpty()) {
+            throw new MiException("El email no puede estar vacío");
+        }
+        if (password == null || password.length() < 6) {
+            throw new MiException("La contraseña debe contener 6 dígitos");
+        }
+        if (!password.equals(password2)) {
+            throw new MiException("Las contraseñas no coinciden");
+        }
     }
 }
 

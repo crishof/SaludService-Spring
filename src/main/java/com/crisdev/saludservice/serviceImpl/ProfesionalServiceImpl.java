@@ -27,9 +27,10 @@ public class ProfesionalServiceImpl {
                                  MultipartFile fotoPerfil, Long matricula, MultipartFile diploma,
                                  String email, String password, String password2) throws MiException, ParseException {
 
-        Date fecha = utilService.formatearFecha(fechaNacimiento);
+        Date fecha;
         try {
             utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, matricula, email, password, password2);
+            fecha = utilService.formatearFecha(fechaNacimiento);
         } catch (MiException e) {
             throw new MiException(e.getMessage());
         }
