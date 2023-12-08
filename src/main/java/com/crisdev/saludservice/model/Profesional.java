@@ -10,12 +10,11 @@ import javax.persistence.OneToOne;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-public class Profesional extends Usuario{
+public class Profesional extends Usuario {
     private Especialidad especialidad;
     private long matricula;
     @OneToOne
     private Imagen diploma;
-
 
 
 }

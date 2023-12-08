@@ -10,16 +10,23 @@
 <header th:replace="../layout/header :: header"></header>
 <nav th:replace="../layout/navbar :: navbar"></nav>
 
-<div class="text-center card-error m-5">
-    <h2 class="text-center" th:text="'error' + ${codigo}"></h2>
-    <p class="text-center" th:text="${mensaje}"></p>
+<div class="container">
+    <div class="card">
+        <div class="card text-center text-white bg-danger m-5">
+            <div class="card-header">
+                <h2 class="card-title text-center" th:text="'Error ' + ${codigo}"></h2>
+            </div>
+            <div class="card-body">
+                <p class="card-text text-center" th:text="${mensaje}"></p>
+            </div>
+        </div>
+    </div>
 </div>
-
 
 <section class=" text-center container">
     <div class="row mt-3">
         <div class="divVolver">
-            <a th:href="@{/static}" class="btn btn-secondary my-2 botonVolver botones">Volver</a>
+            <a th:href="@{/}" class="btn btn-secondary my-2 botonVolver botones">Volver</a>
         </div>
     </div>
 </section>

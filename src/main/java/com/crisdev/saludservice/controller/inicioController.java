@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.text.ParseException;
 
 @Controller
 @RequestMapping("/")
@@ -23,21 +26,29 @@ public class inicioController {
     }
 
     @PostMapping("/registrarProfesional")
-    public String registrarProfesional(String nombre,
-                                       String apellido,
-                                       String email,
-                                       String password,
-                                       String password2,
+    public String registrarProfesional(@RequestParam String nombre,
+                                       @RequestParam String apellido,
+                                       @RequestParam(required = false) Long dni,
+                                       @RequestParam("fechaNacimiento") String fechaNacimiento,
+                                       MultipartFile fotoPerfil,
+                                       Long matricula,
+                                       MultipartFile diploma,
+                                       @RequestParam String email,
+                                       @RequestParam String password,
+                                       @RequestParam String password2,
                                        ModelMap modelMap) {
 
         try {
-            profesionalService.crearProfesional(nombre, apellido, email, password, password2);
+            profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimiento, fotoPerfil, matricula, diploma, email, password, password2);
             modelMap.addAttribute("exito", "Usuario creado con éxito");
             return "index";
-        } catch (MiException e) {
+        } catch (MiException | ParseException e) {
             modelMap.addAttribute("error", e.getMessage());
-            modelMap.put("nombre",nombre);
-            modelMap.put("apellido",apellido);
+            modelMap.put("nombre", nombre);
+            modelMap.put("apellido", apellido);
+            modelMap.put("dni", dni);
+            modelMap.put("fechaNacimiento", fechaNacimiento);
+            modelMap.put("matricula", matricula);
             modelMap.put("email", email);
             return "profesional_registro";
         }

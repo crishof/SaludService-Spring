@@ -44,7 +44,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
-                    <input class="form-control" type="file" name= "fotoPerfil" id="fotoPerfil">
+                    <input class="form-control" type="file" name="fotoPerfil" id="fotoPerfil">
+                </div>
+                <div class="form-floating mb-3">
+                    <input type="number" class="form-control" id="matricula" name="matricula"
+                           placeholder="matricula" th:value="${matricula}">
+                    <label for="matricula">Numero de matrícula</label>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="email" class="form-control" id="floatingInput" name="email"
@@ -61,7 +66,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="diploma" class="form-label">Diploma</label>
-                    <input class="form-control" type="file" name= "diploma" id="diploma">
+                    <input class="form-control" type="file" name="diploma" id="diploma">
                 </div>
                 <button class="btn btn-primary" type="submit">Registrar</button>
                 <a class="btn btn-secondary" th:href="@{/}">Volver</a>
