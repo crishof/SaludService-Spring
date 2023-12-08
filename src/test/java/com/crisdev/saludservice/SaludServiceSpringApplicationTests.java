@@ -1,4 +1,4 @@
-package com.crisdev.saludservicespring;
+package com.crisdev.saludservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
