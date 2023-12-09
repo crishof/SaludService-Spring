@@ -2,8 +2,8 @@ package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
-import com.crisdev.saludservice.serviceImpl.PacienteServiceImpl;
-import com.crisdev.saludservice.serviceImpl.ProfesionalServiceImpl;
+import com.crisdev.saludservice.service.PacienteService;
+import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,10 +20,10 @@ import java.text.ParseException;
 public class inicioController {
 
     @Autowired
-    ProfesionalServiceImpl profesionalService;
+    ProfesionalService profesionalService;
 
     @Autowired
-    PacienteServiceImpl pacienteService;
+    PacienteService pacienteService;
 
     @GetMapping("/registroProfesional")
     public String registroProfesional(ModelMap modelMap) {
