@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.serviceImpl;
 
+import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
@@ -25,11 +26,11 @@ public class ProfesionalServiceImpl {
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento,
                                  MultipartFile fotoPerfil, Long matricula, MultipartFile diploma,
-                                 String email, String password, String password2) throws MiException, ParseException {
+                                 Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 
         Date fecha;
         try {
-            utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, matricula, email, password, password2);
+            utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password2);
             fecha = utilService.formatearFecha(fechaNacimiento);
         } catch (MiException e) {
             throw new MiException(e.getMessage());
@@ -50,6 +51,7 @@ public class ProfesionalServiceImpl {
         Imagen imagen1 = imagenService.guardar(diploma);
         profesional.setDiploma(imagen1);
         profesional.setMatricula(matricula);
+        profesional.setEspecialidad(especialidad);
 
         profesionalRepository.save(profesional);
 

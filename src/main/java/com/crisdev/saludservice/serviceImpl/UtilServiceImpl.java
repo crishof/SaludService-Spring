@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.serviceImpl;
 
+import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.service.UtilService;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.Date;
 @Service
 public class UtilServiceImpl implements UtilService {
 
-    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, Long matricula,
+    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, Especialidad especialidad, Long matricula,
                                 String email, String password, String password2) throws MiException {
 
         if (nombre.isEmpty()) {
@@ -28,6 +29,9 @@ public class UtilServiceImpl implements UtilService {
         }
         if (matricula == null) {
             throw new MiException("El número de matrícula no puede estar vacío");
+        }
+        if (especialidad == null) {
+            throw new MiException("Debe seleccionar su especialidad médica");
         }
         if (email.isEmpty()) {
             throw new MiException("El email no puede estar vacío");
