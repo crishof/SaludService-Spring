@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class UtilServiceImpl implements UtilService {
@@ -44,15 +45,17 @@ public class UtilServiceImpl implements UtilService {
         }
     }
 
-    public Date formatearFecha(String fechaStr) throws MiException {
+    public LocalDate formatearFecha(String fechaStr) throws MiException {
 
-        Date fecha;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha;
+
         try {
-            fecha = dateFormat.parse(fechaStr);
-        } catch (ParseException e) {
-            throw new MiException("ERROR EN FORMATEAR FECHA " + e.getMessage());
+            fecha = LocalDate.parse(fechaStr, formatter);
+        } catch (Exception e) {
+            throw new MiException("Error al dar formato a la fecha " + e.getMessage());
         }
+
         return fecha;
     }
 

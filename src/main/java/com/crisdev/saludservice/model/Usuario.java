@@ -5,7 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -18,13 +18,14 @@ public class Usuario {
     private String nombre;
     private String apellido;
     private long dni;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String email;
     private String password;
-    private String domicilio;
+    @OneToOne
+    private Ubicacion ubicacion;
     @Enumerated(EnumType.STRING)
     private Rol rol;
-    private Date fechaAlta;
+    private LocalDate fechaAlta;
     private boolean activo;
     @OneToOne
     private Imagen fotoPerfil;

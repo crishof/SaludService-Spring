@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Date;
 
 
@@ -28,7 +29,7 @@ public class ProfesionalServiceImpl {
                                  MultipartFile fotoPerfil, Long matricula, MultipartFile diploma,
                                  Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 
-        Date fecha;
+        LocalDate fecha;
         try {
             utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password2);
             fecha = utilService.formatearFecha(fechaNacimiento);
@@ -44,7 +45,7 @@ public class ProfesionalServiceImpl {
         profesional.setRol(Rol.PROFESIONAL);
         profesional.setEmail(email);
         profesional.setPassword(password);
-        profesional.setFechaAlta(new Date());
+        profesional.setFechaAlta(LocalDate.now());
 
         Imagen imagen = imagenService.guardar(fotoPerfil);
         profesional.setFotoPerfil(imagen);

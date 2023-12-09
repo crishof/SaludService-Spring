@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 @Entity
 @Data
 public class Profesional extends Usuario {
-    
+
     @Enumerated(EnumType.STRING)
     private Especialidad especialidad;
     private long matricula;
