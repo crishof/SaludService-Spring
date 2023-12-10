@@ -16,9 +16,15 @@
 
 <h1>index</h1>
 
-<a class="btn btn-primary" th:href="@{/registroProfesional}">Registro profesional</a>
-<a class="btn btn-primary" th:href="@{/registroPaciente}">Registro paciente</a>
-
+<div class="container m-2">
+    <h3>Registro de Usuarios</h3>
+    <a class="btn btn-primary" th:href="@{/registroProfesional}">Registro profesional</a>
+    <a class="btn btn-primary" th:href="@{/registroPaciente}">Registro paciente</a>
+</div>
+<div class="container m-2">
+    <h3>Listas de usuarios</h3>
+    <a class="btn btn-primary" th:href="@{/profesional/listarProfesionales}">Lista profesionales</a>
+</div>
 
 
 <footer th:replace="../layout/footer :: footer"></footer>

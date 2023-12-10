@@ -1,8 +1,9 @@
 package com.crisdev.saludservice.controller;
 
+import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
-import com.crisdev.saludservice.serviceImpl.PacienteServiceImpl;
-import com.crisdev.saludservice.serviceImpl.ProfesionalServiceImpl;
+import com.crisdev.saludservice.service.PacienteService;
+import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,13 +20,16 @@ import java.text.ParseException;
 public class inicioController {
 
     @Autowired
-    ProfesionalServiceImpl profesionalService;
+    ProfesionalService profesionalService;
 
     @Autowired
-    PacienteServiceImpl pacienteService;
+    PacienteService pacienteService;
 
     @GetMapping("/registroProfesional")
-    public String registroProfesional() {
+    public String registroProfesional(ModelMap modelMap) {
+
+        Especialidad[] especialidades = Especialidad.values();
+        modelMap.addAttribute("especialidades", especialidades);
         return "profesional_registro";
     }
 
@@ -34,16 +38,18 @@ public class inicioController {
                                        @RequestParam String apellido,
                                        @RequestParam(required = false) Long dni,
                                        @RequestParam("fechaNacimiento") String fechaNacimiento,
-                                       MultipartFile fotoPerfil,
-                                       Long matricula,
-                                       MultipartFile diploma,
+                                       @RequestParam(required = false) MultipartFile fotoPerfil,
+                                       @RequestParam(required = false) Long matricula,
+                                       @RequestParam(required = false) MultipartFile diploma,
+                                       @RequestParam(required = false) Especialidad especialidad,
                                        @RequestParam String email,
                                        @RequestParam String password,
                                        @RequestParam String password2,
                                        ModelMap modelMap) {
 
         try {
-            profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimiento, fotoPerfil, matricula, diploma, email, password, password2);
+            profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimiento, fotoPerfil, matricula, diploma,
+                    especialidad, email, password, password2);
             modelMap.addAttribute("exito", "Usuario creado con éxito");
             return "index";
         } catch (MiException | ParseException e) {
@@ -53,6 +59,11 @@ public class inicioController {
             modelMap.put("dni", dni);
             modelMap.put("fechaNacimiento", fechaNacimiento);
             modelMap.put("matricula", matricula);
+
+            Especialidad[] especialidades = Especialidad.values();
+            modelMap.addAttribute("especialidades", especialidades);
+//            modelMap.put("especialidad",especialidad);
+
             modelMap.put("email", email);
             return "profesional_registro";
         }

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+        lang="en"
+>
+<head th:replace="../layout/head :: head"></head>
+
+<body>
+<header th:replace="../layout/header :: header"></header>
+<nav th:replace="../layout/navbar :: navbar"></nav>
+<div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
+
+<div class="container mt-4">
+    <form class="d-inline" id="miFormulario" th:action="@{/profesional/listarProfesionales}">
+        <div class="form-group mx-sm-3 m-2 ">
+            <label for="filtro" class="me-2">Especialidad:</label>
+            <select name="especialidad" id="filtro">
+                <option th:if="${valorSeleccionado != null and valorSeleccionado != ''}" th:value="${valorSeleccionado}"
+                        th:selected="${valorSeleccionado}" th:text="${valorSeleccionado}"></option>
+                <option value="">Ver todas</option>
+                <option th:each="especialidad : ${especialidades}"
+                        th:value="${especialidad}"
+                        th:text="${especialidad}">
+                </option>
+            </select>
+
+            <label for="ordenar" class="ms-5 me-2">Ordenar por:</label>
+            <select id="ordenar" name="columna">
+
+                <option th:if="${ordenSeleccionado != null and ordenSeleccionado != ''}"
+                        th:value="${ordenSeleccionado}"
+                        th:selected="${ordenSeleccionado}"
+                        th:text="${#strings.capitalize(ordenSeleccionado)}"></option>
+
+                <option th:unless="${ordenSeleccionado == 'apellido'}" value="apellido">Apellido</option>
+                <option th:unless="${ordenSeleccionado == 'nombre'}" value="nombre">Nombre</option>
+                <option th:unless="${ordenSeleccionado == 'especialidad' or (valorSeleccionado != null and valorSeleccionado != '')}"
+                        value="especialidad">Especialidad
+                </option>
+                    Valoración
+                </option>
+
+            </select>
+
+        </div>
+    </form>
+</div>
+
+<div class="container">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Especialidad</th>
+            <th scope="col">Foto</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Valoración</th>
+            <th scope="col">Provincia</th>
+            <th scope="col">Localidad</th>
+            <th scope="col">Acciones</th>
+        </tr>
+        </thead>
+        <tbody th:each="profesional : ${profesionales}">
+        <tr>
+            <td th:text="${profesional.especialidad}"></td>
+            <td>
+                <img style="height: 50px;width: 50px; border-radius: 10px; object-fit:cover"
+                     class="logo" th:src="@{/imagen/perfil/__${profesional.id}__}"/>
+            </td>
+            <td th:text="${profesional.apellido}"></td>
+            <td th:text="${profesional.nombre}"></td>
+            <td>Precio</td>
+            <td>Valoracion</td>
+            <td>Provincia</td>
+            <td>Localidad</td>
+            <td>Acciones</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<footer th:replace="../layout/footer :: footer"></footer>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"
+></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        let select = document.getElementById("filtro");
+
+        let ordenar = document.getElementById("ordenar");
+
+
+        select.addEventListener("change", function () {
+
+            document.getElementById("miFormulario").submit();
+        });
+
+        ordenar.addEventListener("change", function () {
+
+            document.getElementById("miFormulario").submit();
+        });
+    });
+</script>
+</body>
+</html>

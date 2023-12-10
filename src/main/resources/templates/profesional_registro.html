@@ -64,6 +64,14 @@
                     <input type="password" class="form-control" id="password2" name="password2" placeholder="password">
                     <label for="password2">Repite tu contraseña </label>
                 </div>
+                <select id="especialidad" name="especialidad" class="form-select"
+                        aria-label="Ejemplo de select predeterminado">
+                    <option value="" selected="">Selecionar especialidad</option>
+                    <option th:each="especialidad : ${especialidades}"
+                            th:value="${especialidad}"
+                            th:text="${especialidad}">
+                    </option>
+                </select>
                 <div class="mb-3">
                     <label for="diploma" class="form-label">Diploma</label>
                     <input class="form-control" type="file" name="diploma" id="diploma">
