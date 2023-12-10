@@ -7,11 +7,13 @@ import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -58,7 +60,18 @@ public class ProfesionalService {
 
     }
 
-    public Object listarProfesionales() {
+    public List<Profesional> listarProfesionales() {
         return profesionalRepository.findAll();
+    }
+
+    public List<Profesional> listarProfesionales(String especialidad, String columna) {
+
+        Sort sort;
+        if (columna == null || columna.isEmpty()) {
+            sort = Sort.by("especialidad");
+        } else {
+            sort = Sort.by(columna);
+        }
+        return profesionalRepository.findByEspecialidadAndSort(especialidad, columna, sort);
     }
 }
