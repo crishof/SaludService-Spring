@@ -32,7 +32,7 @@ public class ProfesionalService {
 
         LocalDate fecha;
         try {
-            utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password2);
+            utilService.validarRegistroProfesional(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password2);
             fecha = utilService.formatearFecha(fechaNacimiento);
         } catch (MiException e) {
             throw new MiException(e.getMessage());
