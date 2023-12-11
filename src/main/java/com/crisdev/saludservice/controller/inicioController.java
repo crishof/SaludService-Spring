@@ -25,6 +25,25 @@ public class inicioController {
     @Autowired
     PacienteService pacienteService;
 
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+
+    @GetMapping("/login")
+    public String login(@RequestParam(required = false) String error, ModelMap modelMap) {
+
+        if (error != null) {
+            modelMap.addAttribute("error", "usuario o contraseña incorrectos");
+        }
+        return "login";
+    }
+
+    @GetMapping("/inicio")
+    public String inicio() {
+        return "inicio";
+    }
+
     @GetMapping("/registroProfesional")
     public String registroProfesional(ModelMap modelMap) {
 
@@ -34,22 +53,10 @@ public class inicioController {
     }
 
     @PostMapping("/registrarProfesional")
-    public String registrarProfesional(@RequestParam String nombre,
-                                       @RequestParam String apellido,
-                                       @RequestParam(required = false) Long dni,
-                                       @RequestParam("fechaNacimiento") String fechaNacimiento,
-                                       @RequestParam(required = false) MultipartFile fotoPerfil,
-                                       @RequestParam(required = false) Long matricula,
-                                       @RequestParam(required = false) MultipartFile diploma,
-                                       @RequestParam(required = false) Especialidad especialidad,
-                                       @RequestParam String email,
-                                       @RequestParam String password,
-                                       @RequestParam String password2,
-                                       ModelMap modelMap) {
+    public String registrarProfesional(@RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) Long dni, @RequestParam("fechaNacimiento") String fechaNacimiento, @RequestParam(required = false) MultipartFile fotoPerfil, @RequestParam(required = false) Long matricula, @RequestParam(required = false) MultipartFile diploma, @RequestParam(required = false) Especialidad especialidad, @RequestParam String email, @RequestParam String password, @RequestParam String password2, ModelMap modelMap) {
 
         try {
-            profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimiento, fotoPerfil, matricula, diploma,
-                    especialidad, email, password, password2);
+            profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimiento, fotoPerfil, matricula, diploma, especialidad, email, password, password2);
             modelMap.addAttribute("exito", "Usuario creado con éxito");
             return "index";
         } catch (MiException | ParseException e) {
@@ -75,15 +82,7 @@ public class inicioController {
     }
 
     @PostMapping("/registrarPaciente")
-    public String registrarPaciente(@RequestParam String nombre,
-                                    @RequestParam String apellido,
-                                    @RequestParam(required = false) Long dni,
-                                    @RequestParam("fechaNacimiento") String fechaNacimiento,
-                                    MultipartFile fotoPerfil,
-                                    @RequestParam String email,
-                                    @RequestParam String password,
-                                    @RequestParam String password2,
-                                    ModelMap modelMap) {
+    public String registrarPaciente(@RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) Long dni, @RequestParam("fechaNacimiento") String fechaNacimiento, MultipartFile fotoPerfil, @RequestParam String email, @RequestParam String password, @RequestParam String password2, ModelMap modelMap) {
 
         try {
             pacienteService.crearPaciente(nombre, apellido, dni, fechaNacimiento, fotoPerfil, email, password, password2);

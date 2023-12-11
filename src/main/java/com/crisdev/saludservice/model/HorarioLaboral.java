@@ -19,7 +19,7 @@ public class HorarioLaboral {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    private  String diaSemana;
+    private String diaSemana;
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
     @ManyToOne

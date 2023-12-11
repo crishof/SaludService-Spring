@@ -10,7 +10,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -21,8 +20,7 @@ public class ProfesionalController {
     ProfesionalService profesionalService;
 
     @GetMapping("/listarProfesionales")
-    public String listarProfesionales(@Param("especialidad") String especialidad,
-                                      @Param("columna") String columna, ModelMap modelo) {
+    public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {
 
 
         List<Profesional> profesionales = profesionalService.listarProfesionales(especialidad, columna);
