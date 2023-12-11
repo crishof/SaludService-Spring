@@ -12,41 +12,7 @@
 <nav th:replace="../layout/navbar :: navbar"></nav>
 <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-<div class="container mt-4">
-    <form class="d-inline" id="miFormulario" th:action="@{/profesional/listarProfesionales}">
-        <div class="form-group mx-sm-3 m-2 ">
-            <label for="filtro" class="me-2">Especialidad:</label>
-            <select name="especialidad" id="filtro">
-                <option th:if="${valorSeleccionado != null and valorSeleccionado != ''}" th:value="${valorSeleccionado}"
-                        th:selected="${valorSeleccionado}" th:text="${valorSeleccionado}"></option>
-                <option value="">Ver todas</option>
-                <option th:each="especialidad : ${especialidades}"
-                        th:value="${especialidad}"
-                        th:text="${especialidad}">
-                </option>
-            </select>
-
-            <label for="ordenar" class="ms-5 me-2">Ordenar por:</label>
-            <select id="ordenar" name="columna">
-
-                <option th:if="${ordenSeleccionado != null and ordenSeleccionado != ''}"
-                        th:value="${ordenSeleccionado}"
-                        th:selected="${ordenSeleccionado}"
-                        th:text="${#strings.capitalize(ordenSeleccionado)}"></option>
-
-                <option th:unless="${ordenSeleccionado == 'apellido'}" value="apellido">Apellido</option>
-                <option th:unless="${ordenSeleccionado == 'nombre'}" value="nombre">Nombre</option>
-                <option th:unless="${ordenSeleccionado == 'especialidad' or (valorSeleccionado != null and valorSeleccionado != '')}"
-                        value="especialidad">Especialidad
-                </option>
-                    Valoración
-                </option>
-
-            </select>
-
-        </div>
-    </form>
-</div>
+<div th:replace="../layout/filtro_profesionales :: filtro"></div>
 
 <div class="container">
     <table class="table table-hover">
@@ -80,6 +46,7 @@
         </tr>
         </tbody>
     </table>
+    <a class="btn btn-secondary" th:href="@{/}">Volver</a>
 </div>
 
 <footer th:replace="../layout/footer :: footer"></footer>
@@ -88,24 +55,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"
 ></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
 
-        let select = document.getElementById("filtro");
-
-        let ordenar = document.getElementById("ordenar");
-
-
-        select.addEventListener("change", function () {
-
-            document.getElementById("miFormulario").submit();
-        });
-
-        ordenar.addEventListener("change", function () {
-
-            document.getElementById("miFormulario").submit();
-        });
-    });
-</script>
+<div th:replace="../layout/filtro_profesionales :: filtroScript"></div>
 </body>
 </html>

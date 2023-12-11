@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -74,4 +75,20 @@ public class ProfesionalService {
         }
         return profesionalRepository.findByEspecialidadAndSort(especialidad, columna, sort);
     }
+
+    public void modificarProfesional(String id, String nombre, String apellido, String email) throws MiException {
+
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+        if (respuesta.isPresent()) {
+            Profesional profesional = respuesta.get();
+            profesional.setNombre(nombre);
+            profesional.setApellido(apellido);
+            profesional.setEmail(email);
+            profesionalRepository.save(profesional);
+        } else {
+            throw new MiException("Profesional no encontrado");
+        }
+    }
+
 }
+

@@ -25,6 +25,13 @@
     <h3>Listas de usuarios</h3>
     <a class="btn btn-primary" th:href="@{/profesional/listarProfesionales}">Lista profesionales</a>
 </div>
+<div class="container m-2">
+    <h3>Crear Registros</h3>
+    <p class="m-4">Click para simular profesional <span>
+                <a th:href="@{/util/profesionalRandom}"><i class="fa fa-database"></i></a></span></p>
+    <p class="m-4">Click para simular paciente <span>
+                <a th:href="@{/util/pacienteRandom}"><i class="fa fa-database"></i></a></span></p>
+</div>
 
 
 <footer th:replace="../layout/footer :: footer"></footer>

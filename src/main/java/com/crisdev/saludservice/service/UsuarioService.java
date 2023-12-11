@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class UsuarioService {
+public class UsuarioService{
 
     @Autowired
     UsuarioRepository usuarioRepository;
