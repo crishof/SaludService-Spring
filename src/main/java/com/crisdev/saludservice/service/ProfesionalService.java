@@ -8,12 +8,14 @@ import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -26,9 +28,7 @@ public class ProfesionalService {
     @Autowired
     ImagenService imagenService;
 
-    public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento,
-                                 MultipartFile fotoPerfil, Long matricula, MultipartFile diploma,
-                                 Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
+    public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 
         LocalDate fecha;
         try {
@@ -45,7 +45,7 @@ public class ProfesionalService {
         profesional.setFechaNacimiento(fecha);
         profesional.setRol(Rol.PROFESIONAL);
         profesional.setEmail(email);
-        profesional.setPassword(password);
+        profesional.setPassword(new BCryptPasswordEncoder().encode(password));
         profesional.setFechaAlta(LocalDate.now());
 
         Imagen imagen = imagenService.guardar(fotoPerfil);
@@ -74,4 +74,20 @@ public class ProfesionalService {
         }
         return profesionalRepository.findByEspecialidadAndSort(especialidad, columna, sort);
     }
+
+    public void modificarProfesional(String id, String nombre, String apellido, String email) throws MiException {
+
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+        if (respuesta.isPresent()) {
+            Profesional profesional = respuesta.get();
+            profesional.setNombre(nombre);
+            profesional.setApellido(apellido);
+            profesional.setEmail(email);
+            profesionalRepository.save(profesional);
+        } else {
+            throw new MiException("Profesional no encontrado");
+        }
+    }
+
 }
+

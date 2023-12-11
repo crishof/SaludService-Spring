@@ -20,10 +20,18 @@
     <h3>Registro de Usuarios</h3>
     <a class="btn btn-primary" th:href="@{/registroProfesional}">Registro profesional</a>
     <a class="btn btn-primary" th:href="@{/registroPaciente}">Registro paciente</a>
+    <a class="btn btn-primary" th:href="@{/login}">Login</a>
 </div>
 <div class="container m-2">
     <h3>Listas de usuarios</h3>
     <a class="btn btn-primary" th:href="@{/profesional/listarProfesionales}">Lista profesionales</a>
+</div>
+<div class="container m-2">
+    <h3>Crear Registros</h3>
+    <p class="m-4">Click para simular profesional <span>
+                <a th:href="@{/util/profesionalRandom}"><i class="fa fa-database"></i></a></span></p>
+    <p class="m-4">Click para simular paciente <span>
+                <a th:href="@{/util/pacienteRandom}"><i class="fa fa-database"></i></a></span></p>
 </div>
 
 

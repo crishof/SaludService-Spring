@@ -6,6 +6,7 @@ import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +40,7 @@ public class PacienteService {
         Paciente.setFechaNacimiento(fecha);
         Paciente.setRol(Rol.PACIENTE);
         Paciente.setEmail(email);
-        Paciente.setPassword(password);
+        Paciente.setPassword(new BCryptPasswordEncoder().encode(password));
         Paciente.setFechaAlta(LocalDate.now());
 
         Imagen imagen = imagenService.guardar(fotoPerfil);

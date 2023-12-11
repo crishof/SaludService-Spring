@@ -19,4 +19,7 @@ public interface ProfesionalRepository extends JpaRepository<Profesional, String
             "CASE WHEN :columna = 'apellido' THEN p.apellido END," +
             "CASE WHEN :columna = 'especialidad' THEN p.especialidad END DESC")
     List<Profesional> findByEspecialidadAndSort(@Param("especialidad") String especialidad, @Param("columna") String columna, Sort sort);
+
+    @Query("SELECT p FROM Profesional p WHERE p.email = :email")
+    Profesional buscarPorEmail(@Param("email") String email);
 }

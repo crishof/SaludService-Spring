@@ -4,10 +4,8 @@ import com.crisdev.saludservice.enums.Especialidad;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -19,6 +17,8 @@ public class Profesional extends Usuario {
     private long matricula;
     @OneToOne
     private Imagen diploma;
+    @OneToMany
+    private List<HorarioLaboral> horarioLaboral;
 
 
 }
