@@ -4,6 +4,7 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.UsuarioService;
 import com.crisdev.saludservice.service.UtilService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 public class UsuarioController {
     final UsuarioService usuarioService;
     final UtilService utilService;
+
     public UsuarioController(UsuarioService usuarioService, UtilService utilService) {
         this.usuarioService = usuarioService;
         this.utilService = utilService;
@@ -68,27 +70,41 @@ public class UsuarioController {
     }
 
     @GetMapping("/perfil")
-    public String perfil(ModelMap model, HttpSession session) {
-        Usuario usuario = (Usuario) session.getAttribute("usuariosession");
-        model.put("usuario", usuario);
+    public String perfil(ModelMap model, @RequestParam(required = false) String error, @RequestParam(required = false) String exito) {
+        if (error != null) {
+            model.put("error", error);
+        }
+        if (exito != null) {
+            model.put("exito", exito);
+        }
         return "usuario_modificar";
     }
 
     @PostMapping("/perfil/{id}")
-    public String actualizar(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam Long dni, @RequestParam String email, ModelMap model) {
+    public String actualizar(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
+        model.put("usuario", session);
         try {
-            usuarioService.modificar(archivo, id, nombre, apellido, dni, email);
-            model.put("exito", "usuario actualizado correctamente");
-            return "index";
+            utilService.validarEdit(nombre, apellido, dni, email);
+
+            Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+            usuario.setNombre(nombre);
+            usuario.setApellido(apellido);
+            usuario.setDni(dni);
+            usuario.setEmail(email);
+            session.setAttribute("usuariosession", usuario);
+
+            usuarioService.editarUsuario(id, nombre, dni, apellido, email);
+            redirectAttributes.addAttribute("exito", "Usuario modificado con éxito");
         } catch (MiException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+            model.addAttribute("nombre", nombre);
+            model.addAttribute("apellido", apellido);
+            model.addAttribute("dni", dni);
+            model.addAttribute("email", email);
 
-            model.put("error", e.getMessage());
-            model.put("nombre", nombre);
-            model.put("email", email);
-            return "usuario_modificar";
+            return "redirect:/usuario/perfil";
         }
-
+        return "redirect:/usuario/perfil";
     }
-
 }
