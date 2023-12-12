@@ -1,0 +1,10 @@
+<nav th:fragment="navbar">
+
+    <h2>NAVBAR</h2>
+    <form method="POST" th:action="@{/logout}">
+        <a class="btn btn-primary" href="#" onclick="this.parentNode.submit();">
+            Logout
+        </a>
+    </form>
+
+</nav>
