@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.controller;
 
+import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.UsuarioService;
@@ -24,7 +25,7 @@ public class ImagenController {
     UsuarioService usuarioService;
 
     @GetMapping("/perfil/{id}")
-    public ResponseEntity<byte[]> imagenUsuario(@PathVariable String id) {
+    public ResponseEntity<byte[]> imagenUsuario(@PathVariable String id) throws MiException {
 
         Usuario usuario = usuarioService.buscarUsuario(id);
         byte[] imagen = usuario.getFotoPerfil().getContenido();

@@ -3,6 +3,7 @@ package com.crisdev.saludservice.service;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -60,6 +61,22 @@ public class UtilService {
         if (!password.equals(password2)) {
             throw new MiException("Las contraseñas no coinciden");
         }
+    }
+
+    public void validarEdit(String nombre, String apellido, Long dni, String email) throws MiException {
+        if (nombre.isEmpty()) {
+            throw new MiException("El nombre no puede estar vacío");
+        }
+        if (apellido.isEmpty()) {
+            throw new MiException("El apellido no puede estar vacío");
+        }
+        if (dni == null) {
+            throw new MiException("El dni no puede estar vacío");
+        }
+        if (email.isEmpty()) {
+            throw new MiException("El email no puede estar vacío");
+        }
+
     }
 }
 

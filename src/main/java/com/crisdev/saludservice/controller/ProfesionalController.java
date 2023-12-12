@@ -5,6 +5,7 @@ import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,5 +31,11 @@ public class ProfesionalController {
         modelo.addAttribute("valorSeleccionado", especialidad);
         modelo.addAttribute("ordenSeleccionado", columna);
         return "profesional_lista";
+    }
+
+    @PreAuthorize("hasAnyRole('PROFESIONAL','ADMIN')")
+    @GetMapping("/dashboard")
+    public String panel() {
+        return "dashboard_profesional";
     }
 }

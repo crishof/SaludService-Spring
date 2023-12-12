@@ -12,7 +12,12 @@
 <nav th:replace="../layout/navbar :: navbar"></nav>
 <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-<h1>DASHBOARD PROFESIONAL</h1>
+<h1>DASHBOARD</h1>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <p>Bienvenido, administrador.</p>
+</div>
+
+<a class="btn btn-primary" th:href="@{/usuario/listarUsuarios}">Listar Usuarios</a>
 
 <footer th:replace="../layout/footer :: footer"></footer>
 <script
