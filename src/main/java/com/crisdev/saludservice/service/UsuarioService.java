@@ -1,10 +1,11 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,31 +15,43 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
 public class UsuarioService implements UserDetailsService {
 
-    @Autowired
+    final
     UsuarioRepository usuarioRepository;
-    @Autowired
+    final
     PacienteRepository pacienteRepository;
-    @Autowired
+    final
     ProfesionalRepository profesionalRepository;
+    final
+    UtilService utilService;
+    final
+    ImagenService imagenService;
 
-    public Usuario buscarUsuario(String id) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService) {
+        this.usuarioRepository = usuarioRepository;
+        this.pacienteRepository = pacienteRepository;
+        this.profesionalRepository = profesionalRepository;
+        this.utilService = utilService;
+        this.imagenService = imagenService;
+    }
+
+    public Usuario buscarUsuario(String id) throws MiException {
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(id);
 
         if (optionalUsuario.isPresent()) {
             return optionalUsuario.get();
         } else {
             // Manejar el caso en que el usuario no existe, por ejemplo, lanzar una excepción o devolver un valor predeterminado
-            throw new NoSuchElementException("Usuario no encontrado con ID: " + id);
+            throw new MiException("Usuario no encontrado con ID: " + id);
         }
     }
 
@@ -58,6 +71,49 @@ public class UsuarioService implements UserDetailsService {
             return new User(usuario.getEmail(), usuario.getPassword(), permisos);
         } else {
             return null;
+        }
+    }
+
+    public List<Usuario> listarUsuarios() {
+        return usuarioRepository.findAll();
+    }
+
+    public void editarUsuario(String id, String nombre, Long dni, String apellido, String email) throws MiException {
+
+        Optional<Usuario> respuesta = usuarioRepository.findById(id);
+
+        if (respuesta.isPresent()) {
+            Usuario usuario = respuesta.get();
+            usuario.setNombre(nombre);
+            usuario.setApellido(apellido);
+            usuario.setDni(dni);
+            usuario.setEmail(email);
+            usuarioRepository.save(usuario);
+        } else {
+            throw new MiException("Usuario no encontrado");
+        }
+    }
+
+    public void modificar(MultipartFile archivo, String idUsuario, String nombre, String apellido, Long dni, String email) throws MiException {
+        utilService.validarEdit(nombre, apellido, dni, email);
+
+        Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
+        if (respuesta.isPresent()) {
+            Usuario usuario = respuesta.get();
+            usuario.setNombre(nombre);
+            usuario.setApellido(apellido);
+            usuario.setDni(dni);
+            usuario.setEmail(email);
+
+            String idImagen = null;
+
+            if (usuario.getFotoPerfil() != null) {
+                idImagen = usuario.getFotoPerfil().getId();
+            }
+            Imagen imagen = imagenService.actualizar(idImagen, archivo);
+            usuario.setFotoPerfil(imagen);
+
+            usuarioRepository.save(usuario);
         }
     }
 }

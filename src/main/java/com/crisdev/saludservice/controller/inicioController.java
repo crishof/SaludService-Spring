@@ -2,9 +2,11 @@ package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 
 @Controller
@@ -39,9 +42,20 @@ public class inicioController {
         return "login";
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_PROFESIONAL','ROLE_PACIENTE','ROLE_ADMIN')")
     @GetMapping("/inicio")
-    public String inicio() {
-        return "inicio";
+    public String inicio(HttpSession session) {
+
+        Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+
+        System.out.println(logueado.getRol().toString());
+        if (logueado.getRol().toString().equals("ADMIN")) {
+            return "redirect:/admin/dashboard";
+        }
+        if (logueado.getRol().toString().equals("PROFESIONAL")) {
+            return "redirect:/profesional/dashboard";
+        }
+        return "dashboard_paciente";
     }
 
     @GetMapping("/registroProfesional")
