@@ -1,6 +1,8 @@
 package com.crisdev.saludservice.service;
 
 import com.crisdev.saludservice.enums.Especialidad;
+import com.crisdev.saludservice.enums.Pais;
+import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,8 +13,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class UtilService {
 
-    public void validarRegistroProfesional(String nombre, String apellido, String fecha, Long dni, Especialidad especialidad, Long matricula,
-                                           String email, String password, String password2) throws MiException {
+    public void validarRegistroProfesional(String nombre, String apellido, String fecha, Long dni, Especialidad especialidad, Long matricula, String email, String password, String password2) throws MiException {
 
         validarRegistro(nombre, apellido, fecha, dni, email, password, password2);
 
@@ -38,8 +39,7 @@ public class UtilService {
         return fecha;
     }
 
-    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, String email,
-                                String password, String password2) throws MiException {
+    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, String email, String password, String password2) throws MiException {
         if (nombre.isEmpty()) {
             throw new MiException("El nombre no puede estar vacío");
         }
@@ -77,6 +77,25 @@ public class UtilService {
             throw new MiException("El email no puede estar vacío");
         }
 
+    }
+
+    public void validarUbicacion(Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) throws MiException {
+
+        if (pais == null) {
+            throw new MiException("Debe seleccionar un país");
+        }
+        if (provincia == null) {
+            throw new MiException("Debe seleccionar una provincia");
+        }
+        if (localidad.isEmpty()) {
+            throw new MiException("La localidad no puede estar vacía");
+        }
+        if (codigoPostal.isEmpty()) {
+            throw new MiException("El codigo postal no puede estar vacío");
+        }
+        if (domicilio.isEmpty()) {
+            throw new MiException("El domicilio no puede estar vacío");
+        }
     }
 }
 

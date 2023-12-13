@@ -1,7 +1,10 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.Pais;
+import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
+import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
@@ -25,23 +28,20 @@ import java.util.Optional;
 @Service
 public class UsuarioService implements UserDetailsService {
 
-    final
-    UsuarioRepository usuarioRepository;
-    final
-    PacienteRepository pacienteRepository;
-    final
-    ProfesionalRepository profesionalRepository;
-    final
-    UtilService utilService;
-    final
-    ImagenService imagenService;
+    final UsuarioRepository usuarioRepository;
+    final PacienteRepository pacienteRepository;
+    final ProfesionalRepository profesionalRepository;
+    final UtilService utilService;
+    final ImagenService imagenService;
+    final UbicacionService ubicacionService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
         this.usuarioRepository = usuarioRepository;
         this.pacienteRepository = pacienteRepository;
         this.profesionalRepository = profesionalRepository;
         this.utilService = utilService;
         this.imagenService = imagenService;
+        this.ubicacionService = ubicacionService;
     }
 
     public Usuario buscarUsuario(String id) throws MiException {
@@ -113,6 +113,25 @@ public class UsuarioService implements UserDetailsService {
             Imagen imagen = imagenService.actualizar(idImagen, archivo);
             usuario.setFotoPerfil(imagen);
 
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    public void actualizarUbicacion(String id, Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) throws MiException {
+
+        Optional<Usuario> respuesta = usuarioRepository.findById(id);
+        if (respuesta.isPresent()) {
+            Usuario usuario = respuesta.get();
+            Ubicacion ubicacion;
+
+            if (usuario.getUbicacion() == null) {
+                ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, codigoPostal, domicilio);
+                usuario.setUbicacion(ubicacion);
+            } else {
+                String idUbicacion = usuario.getUbicacion().getId();
+                ubicacion = ubicacionService.actualizarUbicacion(idUbicacion, pais, provincia, localidad, codigoPostal, domicilio);
+                usuario.setUbicacion(ubicacion);
+            }
             usuarioRepository.save(usuario);
         }
     }

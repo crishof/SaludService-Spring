@@ -6,7 +6,6 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,12 +20,18 @@ import java.util.Optional;
 @Service
 public class ProfesionalService {
 
-    @Autowired
+    final
     UtilService utilService;
-    @Autowired
+    final
     ProfesionalRepository profesionalRepository;
-    @Autowired
+    final
     ImagenService imagenService;
+
+    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService) {
+        this.utilService = utilService;
+        this.profesionalRepository = profesionalRepository;
+        this.imagenService = imagenService;
+    }
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 

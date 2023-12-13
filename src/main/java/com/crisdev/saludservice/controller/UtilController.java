@@ -9,8 +9,7 @@ import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,7 +28,6 @@ public class UtilController {
 
     @Autowired
     ProfesionalRepository profesionalRepository;
-
 
     @GetMapping("/profesionalRandom")
     public String cargarDataBase() throws MiException, ParseException {
@@ -146,5 +144,4 @@ public class UtilController {
 
         return "index";
     }
-
 }
