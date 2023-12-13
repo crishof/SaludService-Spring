@@ -5,7 +5,6 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,11 +21,14 @@ import java.text.ParseException;
 @RequestMapping("/")
 public class inicioController {
 
-    @Autowired
-    ProfesionalService profesionalService;
+    final ProfesionalService profesionalService;
 
-    @Autowired
-    PacienteService pacienteService;
+    final PacienteService pacienteService;
+
+    public inicioController(ProfesionalService profesionalService, PacienteService pacienteService) {
+        this.profesionalService = profesionalService;
+        this.pacienteService = pacienteService;
+    }
 
     @GetMapping("/")
     public String index() {

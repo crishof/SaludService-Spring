@@ -2,11 +2,15 @@ package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
+import com.crisdev.saludservice.enums.Pais;
 import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.Paciente;
+import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
+import com.crisdev.saludservice.service.UbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,9 @@ public class UtilController {
 
     @Autowired
     ProfesionalRepository profesionalRepository;
+
+    @Autowired
+    UbicacionService ubicacionService;
 
     @GetMapping("/profesionalRandom")
     public String cargarDataBase() throws MiException, ParseException {
@@ -62,14 +69,13 @@ public class UtilController {
 
         Especialidad especialidad = Especialidad.values()[random.nextInt(Especialidad.values().length)];
 
-        Provincia provincias = Provincia.values()[random.nextInt(Provincia.values().length)];
-        System.out.println("provincias = " + provincias);
-
+        Pais pais = Pais.values()[random.nextInt(Pais.values().length)];
+        Provincia provincia = Provincia.values()[random.nextInt(Provincia.values().length)];
         String localidad = localidades[random.nextInt(localidades.length)];
-        System.out.println("localidad = " + localidad);
-
         String direccion = direcciones[random.nextInt(direcciones.length)];
-        System.out.println("direccion = " + direccion);
+        String codigoPostal = String.valueOf(random.nextInt(1000, 9999));
+
+        Ubicacion ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
 
         List<DiaSemana> diasDisponibles = new ArrayList<>();
         DiaSemana[] diasSemana = DiaSemana.values();
@@ -77,7 +83,6 @@ public class UtilController {
             DiaSemana diaAleatorio = diasSemana[random.nextInt(diasSemana.length)];
             diasDisponibles.add(diaAleatorio);
         }
-
 
         LocalTime[] horariosEntrada = new LocalTime[17];
         for (int i = 0; i < 17; i++) {
@@ -95,7 +100,7 @@ public class UtilController {
         int valorAleatorio = random.nextInt(36) + 15;
         int precioConsulta = Math.round(valorAleatorio * 100.0f / 100) * 100;
 
-        profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimientoStr, null, matricula, null, especialidad, email, password, password);
+        profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimientoStr, null, matricula, null, especialidad, email, password, password, ubicacion);
 
         var registrado = profesionalRepository.buscarPorEmail(email);
 
@@ -131,16 +136,15 @@ public class UtilController {
 
         String password = "123123";
 
-        Provincia provincias = Provincia.values()[random.nextInt(Provincia.values().length)];
-        System.out.println("provincias = " + provincias);
-
+        Pais pais = Pais.values()[random.nextInt(Pais.values().length)];
+        Provincia provincia = Provincia.values()[random.nextInt(Provincia.values().length)];
         String localidad = localidades[random.nextInt(localidades.length)];
-        System.out.println("localidad = " + localidad);
-
         String direccion = direcciones[random.nextInt(direcciones.length)];
-        System.out.println("direccion = " + direccion);
+        String codigoPostal = String.valueOf(random.nextInt(1000, 9999));
 
-        pacienteService.crearPaciente(nombre, apellido, dni, fechaNacimientoStr, null, email, password, password);
+        Ubicacion ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
+
+        pacienteService.crearPaciente(nombre, apellido, dni, fechaNacimientoStr, null, email, password, password, ubicacion);
 
         return "index";
     }

@@ -28,4 +28,11 @@ public class Ubicacion {
     private String codigoPostal;
     private String domicilio;
 
+    public Ubicacion(Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) {
+        this.pais = pais;
+        this.provincia = provincia;
+        this.localidad = localidad;
+        this.codigoPostal = codigoPostal;
+        this.domicilio = domicilio;
+    }
 }

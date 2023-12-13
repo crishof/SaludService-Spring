@@ -5,7 +5,6 @@ import com.crisdev.saludservice.enums.Pais;
 import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
