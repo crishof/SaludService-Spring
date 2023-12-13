@@ -96,5 +96,19 @@ public class UtilService {
             throw new MiException("El domicilio no puede estar vacío");
         }
     }
+
+    public void validadHorario(String dia, String horaEntrada, String horaSalida) throws MiException {
+
+        if (dia.isEmpty()) {
+            throw new MiException("Debe seleccionar un día");
+        }
+        if (horaEntrada.isEmpty()) {
+            throw new MiException("Debe seleccionar la hora de entrada");
+        }
+        if (horaSalida.isEmpty()) {
+            throw new MiException("Debe seleccionar la hora de salida");
+        }
+
+    }
 }
 
