@@ -4,7 +4,6 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/imagen")
 public class ImagenController {
 
-    @Autowired
-    ProfesionalService profesionalService;
+    final ProfesionalService profesionalService;
 
-    @Autowired
-    UsuarioService usuarioService;
+    final UsuarioService usuarioService;
+
+    public ImagenController(ProfesionalService profesionalService, UsuarioService usuarioService) {
+        this.profesionalService = profesionalService;
+        this.usuarioService = usuarioService;
+    }
 
     @GetMapping("/perfil/{id}")
     public ResponseEntity<byte[]> imagenUsuario(@PathVariable String id) throws MiException {

@@ -5,8 +5,8 @@ import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
+import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,12 +21,18 @@ import java.util.Optional;
 @Service
 public class ProfesionalService {
 
-    @Autowired
+    final
     UtilService utilService;
-    @Autowired
+    final
     ProfesionalRepository profesionalRepository;
-    @Autowired
+    final
     ImagenService imagenService;
+
+    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService) {
+        this.utilService = utilService;
+        this.profesionalRepository = profesionalRepository;
+        this.imagenService = imagenService;
+    }
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 
@@ -89,5 +95,35 @@ public class ProfesionalService {
         }
     }
 
+    public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password1, Ubicacion ubicacion) throws MiException {
+
+        LocalDate fecha;
+        try {
+            utilService.validarRegistroProfesional(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password);
+            fecha = utilService.formatearFecha(fechaNacimiento);
+        } catch (MiException e) {
+            throw new MiException(e.getMessage());
+        }
+
+        Profesional profesional = new Profesional();
+        profesional.setNombre(nombre);
+        profesional.setApellido(apellido);
+        profesional.setDni(dni);
+        profesional.setFechaNacimiento(fecha);
+        profesional.setRol(Rol.PROFESIONAL);
+        profesional.setEmail(email);
+        profesional.setPassword(new BCryptPasswordEncoder().encode(password));
+        profesional.setFechaAlta(LocalDate.now());
+
+        Imagen imagen = imagenService.guardar(fotoPerfil);
+        profesional.setFotoPerfil(imagen);
+        Imagen imagen1 = imagenService.guardar(diploma);
+        profesional.setDiploma(imagen1);
+        profesional.setMatricula(matricula);
+        profesional.setEspecialidad(especialidad);
+        profesional.setUbicacion(ubicacion);
+
+        profesionalRepository.save(profesional);
+    }
 }
 
