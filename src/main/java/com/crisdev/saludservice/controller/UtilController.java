@@ -1,22 +1,18 @@
 package com.crisdev.saludservice.controller;
 
-import com.crisdev.saludservice.enums.DiaSemana;
-import com.crisdev.saludservice.enums.Especialidad;
-import com.crisdev.saludservice.enums.Pais;
-import com.crisdev.saludservice.enums.Provincia;
+import com.crisdev.saludservice.enums.*;
 import com.crisdev.saludservice.exception.MiException;
-import com.crisdev.saludservice.model.Paciente;
-import com.crisdev.saludservice.model.Ubicacion;
+import com.crisdev.saludservice.model.*;
+import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
-import com.crisdev.saludservice.service.PacienteService;
-import com.crisdev.saludservice.service.ProfesionalService;
-import com.crisdev.saludservice.service.UbicacionService;
+import com.crisdev.saludservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -36,21 +32,97 @@ public class UtilController {
     @Autowired
     UbicacionService ubicacionService;
 
+    @Autowired
+    UtilService utilService;
+
+    @Autowired
+    PacienteRepository pacienteRepository;
+
+    @Autowired
+    ImagenService imagenService;
+    Random random = new Random();
+
     @GetMapping("/profesionalRandom")
-    public String cargarDataBase() throws MiException, ParseException {
+    public String crearProfesional() throws MiException {
+
+        Usuario usuario = crearUsuario();
+        Profesional profesional = new Profesional();
+
+        profesional.setNombre(usuario.getNombre());
+        profesional.setApellido(usuario.getApellido());
+        profesional.setDni(usuario.getDni());
+        profesional.setFechaNacimiento(usuario.getFechaNacimiento());
+        profesional.setEmail(usuario.getEmail());
+        profesional.setPassword(usuario.getPassword());
+        profesional.setFotoPerfil(usuario.getFotoPerfil());
+        profesional.setFechaAlta(usuario.getFechaAlta());
+        profesional.setUbicacion(usuario.getUbicacion());
+
+
+        long matricula = random.nextLong(1000, 99999);
+        Especialidad especialidad = Especialidad.values()[random.nextInt(Especialidad.values().length)];
+
+        profesional.setMatricula(matricula);
+        profesional.setEspecialidad(especialidad);
+        profesional.setDiploma(null);
+        profesional.setRol(Rol.PROFESIONAL);
+
+        profesionalRepository.save(profesional);
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/pacienteRandom")
+    public String crearPaciente() throws MiException {
+
+        Usuario usuario = crearUsuario();
+        Paciente paciente = new Paciente();
+
+        paciente.setNombre(usuario.getNombre());
+        paciente.setApellido(usuario.getApellido());
+        paciente.setDni(usuario.getDni());
+        paciente.setFechaNacimiento(usuario.getFechaNacimiento());
+        paciente.setEmail(usuario.getEmail());
+        paciente.setPassword(usuario.getPassword());
+        paciente.setFotoPerfil(usuario.getFotoPerfil());
+        paciente.setFechaAlta(usuario.getFechaAlta());
+        paciente.setUbicacion(usuario.getUbicacion());
+
+        paciente.setRol(Rol.PACIENTE);
+        pacienteRepository.save(paciente);
+
+        return "redirect:/";
+    }
+
+    public Usuario crearUsuario() throws MiException {
 
         String[] nombres = {"Juan", "José", "Antonio", "Manuel", "David", "Carlos", "Francisco", "Jesús", "Pedro", "Pablo", "Luis", "Diego", "Andrés", "Alejandro", "Miguel", "Fernando", "Jorge", "Óscar", "María", "Ana", "Laura", "Carmen", "Elena", "Isabel", "Marta", "Julia", "Sara", "Paula", "Inés", "Teresa", "Cristina", "Blanca", "Rocío", "Alba", "Daniela", "Andrea"};
         String[] apellidos = {"García", "López", "García", "López", "Martínez", "Rodríguez", "Sánchez", "González", "Pérez", "Álvarez", "Romero", "Gómez", "Fernández", "Hernández", "Díaz", "Muñoz", "Castro", "Jiménez", "Moreno", "Martínez", "Rodríguez", "Sánchez", "González", "Pérez", "Álvarez", "Romero"};
-        String[] localidades = {"La Plata", "Mar del Plata", "Quilmes", "San Fernando del Valle de Catamarca", "San Isidro", "Andalgalá", "Resistencia", "Barranqueras ", "Quitilipi"};
-        String[] direcciones = {"9 de Julio 1995", "Rivadavia 110", "San Martín 44", "Belgrano 5962", "Sarmiento 74", "Mitre 998", "Independencia 785", "Pueyrredón 404", "Córdoba 753", "Santa Fe 620"};
-
-        Random random = new Random();
 
         String nombre = nombres[random.nextInt(nombres.length)];
-
         String apellido = apellidos[random.nextInt(apellidos.length)];
+        long dni = random.nextLong(5000000, 50000000);
+        String email = nombre.toLowerCase() + apellido.substring(0, 1).toLowerCase() + "@mail.com";
+        String password = new BCryptPasswordEncoder().encode("123123");
 
-        Long dni = random.nextLong(5000000, 50000000);
+        Usuario usuario = new Usuario();
+
+        Imagen imagen = imagenService.guardar(null);
+
+        usuario.setNombre(nombre);
+        usuario.setApellido(apellido);
+        usuario.setDni(dni);
+        usuario.setFechaNacimiento(crearfecha());
+        usuario.setEmail(email);
+        usuario.setPassword(password);
+        usuario.setFotoPerfil(imagen);
+        usuario.setFechaAlta(LocalDate.now());
+        usuario.setUbicacion(crearUbicacion());
+
+        return usuario;
+    }
+
+    public LocalDate crearfecha() throws MiException {
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, random.nextInt(2024 - 2000) + 2000);
@@ -60,14 +132,13 @@ public class UtilController {
         // Formatear la fecha como una cadena de texto
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String fechaNacimientoStr = dateFormat.format(fechaNacimiento);
+        return utilService.formatearFecha(fechaNacimientoStr);
+    }
 
-        String email = nombre.toLowerCase() + apellido.substring(0, 1).toLowerCase() + "@mail.com";
+    public Ubicacion crearUbicacion() {
 
-        String password = "123123";
-
-        Long matricula = random.nextLong(1000, 99999);
-
-        Especialidad especialidad = Especialidad.values()[random.nextInt(Especialidad.values().length)];
+        String[] localidades = {"La Plata", "Mar del Plata", "Quilmes", "San Fernando del Valle de Catamarca", "San Isidro", "Andalgalá", "Resistencia", "Barranqueras ", "Quitilipi"};
+        String[] direcciones = {"9 de Julio 1995", "Rivadavia 110", "San Martín 44", "Belgrano 5962", "Sarmiento 74", "Mitre 998", "Independencia 785", "Pueyrredón 404", "Córdoba 753", "Santa Fe 620"};
 
         Pais pais = Pais.values()[random.nextInt(Pais.values().length)];
         Provincia provincia = Provincia.values()[random.nextInt(Provincia.values().length)];
@@ -75,7 +146,10 @@ public class UtilController {
         String direccion = direcciones[random.nextInt(direcciones.length)];
         String codigoPostal = String.valueOf(random.nextInt(1000, 9999));
 
-        Ubicacion ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
+        return ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
+    }
+
+    public HorarioLaboral crearHorario() {
 
         List<DiaSemana> diasDisponibles = new ArrayList<>();
         DiaSemana[] diasSemana = DiaSemana.values();
@@ -100,52 +174,8 @@ public class UtilController {
         int valorAleatorio = random.nextInt(36) + 15;
         int precioConsulta = Math.round(valorAleatorio * 100.0f / 100) * 100;
 
-        profesionalService.crearProfesional(nombre, apellido, dni, fechaNacimientoStr, null, matricula, null, especialidad, email, password, password, ubicacion);
-
-        var registrado = profesionalRepository.buscarPorEmail(email);
-
-        return "index";
+        HorarioLaboral horario = new HorarioLaboral();
+        return horario;
     }
 
-    @GetMapping("/pacienteRandom")
-    public String cargarDataBasePaciente() throws MiException, ParseException {
-
-        String[] nombres = {"Juan", "José", "Antonio", "Manuel", "David", "Carlos", "Francisco", "Jesús", "Pedro", "Pablo", "Luis", "Diego", "Andrés", "Alejandro", "Miguel", "Fernando", "Jorge", "Óscar", "María", "Ana", "Laura", "Carmen", "Elena", "Isabel", "Marta", "Julia", "Sara", "Paula", "Inés", "Teresa", "Cristina", "Blanca", "Rocío", "Alba", "Daniela", "Andrea"};
-        String[] apellidos = {"García", "López", "García", "López", "Martínez", "Rodríguez", "Sánchez", "González", "Pérez", "Álvarez", "Romero", "Gómez", "Fernández", "Hernández", "Díaz", "Muñoz", "Castro", "Jiménez", "Moreno", "Martínez", "Rodríguez", "Sánchez", "González", "Pérez", "Álvarez", "Romero"};
-        String[] localidades = {"La Plata", "Mar del Plata", "Quilmes", "San Fernando del Valle de Catamarca", "San Isidro", "Andalgalá", "Resistencia", "Barranqueras ", "Quitilipi"};
-        String[] direcciones = {"9 de Julio 1995", "Rivadavia 110", "San Martín 44", "Belgrano 5962", "Sarmiento 74", "Mitre 998", "Independencia 785", "Pueyrredón 404", "Córdoba 753", "Santa Fe 620"};
-
-        Random random = new Random();
-
-        String nombre = nombres[random.nextInt(nombres.length)];
-
-        String apellido = apellidos[random.nextInt(apellidos.length)];
-
-        Long dni = random.nextLong(5000000, 50000000);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, random.nextInt(2024 - 2000) + 2000);
-        calendar.set(Calendar.MONTH, random.nextInt(12));
-        calendar.set(Calendar.DAY_OF_MONTH, random.nextInt(31));
-        Date fechaNacimiento = calendar.getTime();
-        // Formatear la fecha como una cadena de texto
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String fechaNacimientoStr = dateFormat.format(fechaNacimiento);
-
-        String email = nombre.toLowerCase() + apellido.substring(0, 1).toLowerCase() + "@mail.com";
-
-        String password = "123123";
-
-        Pais pais = Pais.values()[random.nextInt(Pais.values().length)];
-        Provincia provincia = Provincia.values()[random.nextInt(Provincia.values().length)];
-        String localidad = localidades[random.nextInt(localidades.length)];
-        String direccion = direcciones[random.nextInt(direcciones.length)];
-        String codigoPostal = String.valueOf(random.nextInt(1000, 9999));
-
-        Ubicacion ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
-
-        pacienteService.crearPaciente(nombre, apellido, dni, fechaNacimientoStr, null, email, password, password, ubicacion);
-
-        return "index";
-    }
 }

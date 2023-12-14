@@ -3,10 +3,12 @@ package com.crisdev.saludservice.service;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,12 +24,12 @@ import java.util.Optional;
 @Service
 public class ProfesionalService {
 
-    final
-    UtilService utilService;
-    final
-    ProfesionalRepository profesionalRepository;
-    final
-    ImagenService imagenService;
+    final UtilService utilService;
+    final ProfesionalRepository profesionalRepository;
+    final ImagenService imagenService;
+
+    @Autowired
+    UbicacionService ubicacionService;
 
     public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService) {
         this.utilService = utilService;
@@ -38,7 +41,9 @@ public class ProfesionalService {
 
         LocalDate fecha;
         try {
-            utilService.validarRegistroProfesional(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password2);
+            utilService.validarUsuario(nombre, apellido, fechaNacimiento, dni, email);
+            utilService.validarPassword(password, password2);
+            utilService.validarProfesional(especialidad, matricula);
             fecha = utilService.formatearFecha(fechaNacimiento);
         } catch (MiException e) {
             throw new MiException(e.getMessage());
@@ -58,16 +63,15 @@ public class ProfesionalService {
         profesional.setFotoPerfil(imagen);
         Imagen imagen1 = imagenService.guardar(diploma);
         profesional.setDiploma(imagen1);
+
+        String str = "";
+        Ubicacion ubicacion = ubicacionService.crearUbicacion(null, null, str, str, str);
+        profesional.setUbicacion(ubicacion);
+
         profesional.setMatricula(matricula);
         profesional.setEspecialidad(especialidad);
 
         profesionalRepository.save(profesional);
-
-
-    }
-
-    public List<Profesional> listarProfesionales() {
-        return profesionalRepository.findAll();
     }
 
     public List<Profesional> listarProfesionales(String especialidad, String columna) {
@@ -95,35 +99,25 @@ public class ProfesionalService {
         }
     }
 
-    public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password1, Ubicacion ubicacion) throws MiException {
+    public void agregarHorario(String id, HorarioLaboral horario) {
 
-        LocalDate fecha;
-        try {
-            utilService.validarRegistroProfesional(nombre, apellido, fechaNacimiento, dni, especialidad, matricula, email, password, password);
-            fecha = utilService.formatearFecha(fechaNacimiento);
-        } catch (MiException e) {
-            throw new MiException(e.getMessage());
+        System.out.println("TEST AGREGAR HORARIO");
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+
+        if (respuesta.isPresent()) {
+            Profesional profesional = respuesta.get();
+            System.out.println("TEST AGREGAR HORARIO EN EL IF");
+            if (profesional.getHorarioLaboral() == null) {
+                var horarioLaboral = new ArrayList<HorarioLaboral>();
+                horarioLaboral.add(horario);
+                profesional.setHorarioLaboral(horarioLaboral);
+                profesionalRepository.save(profesional);
+            } else {
+                System.out.println("TEST AGREGAR HORARIO EN EL ELSE");
+                profesional.getHorarioLaboral().add(horario);
+                profesionalRepository.save(profesional);
+            }
         }
-
-        Profesional profesional = new Profesional();
-        profesional.setNombre(nombre);
-        profesional.setApellido(apellido);
-        profesional.setDni(dni);
-        profesional.setFechaNacimiento(fecha);
-        profesional.setRol(Rol.PROFESIONAL);
-        profesional.setEmail(email);
-        profesional.setPassword(new BCryptPasswordEncoder().encode(password));
-        profesional.setFechaAlta(LocalDate.now());
-
-        Imagen imagen = imagenService.guardar(fotoPerfil);
-        profesional.setFotoPerfil(imagen);
-        Imagen imagen1 = imagenService.guardar(diploma);
-        profesional.setDiploma(imagen1);
-        profesional.setMatricula(matricula);
-        profesional.setEspecialidad(especialidad);
-        profesional.setUbicacion(ubicacion);
-
-        profesionalRepository.save(profesional);
     }
 }
 

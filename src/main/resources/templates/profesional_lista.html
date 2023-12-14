@@ -40,8 +40,8 @@
             <td th:text="${profesional.nombre}"></td>
             <td>Precio</td>
             <td>Valoracion</td>
-            <td>Provincia</td>
-            <td>Localidad</td>
+            <td th:text="${profesional.ubicacion.provincia}"></td>
+            <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
             <td>Acciones</td>
         </tr>
         </tbody>

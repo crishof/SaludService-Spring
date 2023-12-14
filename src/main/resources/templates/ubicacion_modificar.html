@@ -41,7 +41,6 @@
                     <option value="" selected>Selecionar provincia</option>
                     <option th:each="provincia : ${provincias}"
                             th:value="${provincia}"
-                            th:if="${session.usuariosession.ubicacion.provincia != null}"
                             th:text="${provincia}"
                             th:selected="${session.usuariosession.ubicacion != null ? provincia == session.usuariosession.ubicacion.provincia : provincia}">>
 

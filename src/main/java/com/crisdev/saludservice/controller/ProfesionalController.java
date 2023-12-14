@@ -9,7 +9,6 @@ import com.crisdev.saludservice.service.HorarioLaboralService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -71,12 +70,15 @@ public class ProfesionalController {
     @PostMapping("/horario/{id}")
     public String crearHorario(@PathVariable String id, String dia, String horaEntrada, String horaSalida, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
+        System.out.println("TEST POST ENTRADA");
         try {
-            utilService.validadHorario(dia, horaEntrada, horaSalida);
+            utilService.validarHorario(dia, horaEntrada, horaSalida);
 
             Usuario usuario = (Usuario) session.getAttribute("usuariosession");
 
-            horarioLaboralService.crearHorario(id, dia, horaEntrada, horaSalida);
+            var horario = horarioLaboralService.crearHorario(id, dia, horaEntrada, horaSalida);
+
+            profesionalService.agregarHorario(id, horario);
 
 
             redirectAttributes.addAttribute("exito", "Usuario modificado con éxito");
