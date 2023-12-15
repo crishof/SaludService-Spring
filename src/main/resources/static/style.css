@@ -1,0 +1,19 @@
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* 100% del viewport height */
+    margin: 0;
+}
+
+.main-content {
+    flex: 1; /* Ocupa todo el espacio disponible */
+}
+
+footer {
+    flex-shrink: 0; /* No se encogerá */
+}
+
+a{
+    text-decoration: none;
+}

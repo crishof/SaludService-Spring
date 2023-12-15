@@ -8,68 +8,70 @@
 
 <head th:replace="../layout/head :: head"></head>
 <body>
+<div class="main-content">
 
 
-<header th:replace="../layout/header :: header"></header>
-<nav th:replace="../layout/navbar :: navbar"></nav>
+    <header th:replace="../layout/header :: header"></header>
+    <nav th:replace="../layout/navbar :: navbar"></nav>
 
-<div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
+    <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-<h2>Datos de contacto</h2>
+    <h2>Datos de contacto</h2>
 
-<div class="container">
+    <div class="container">
 
 
-    <div class="card">
-        <div class="card-body">
-            <form th:action="@{/usuario/ubicacion/__${session.usuariosession.id}__}" method="post"
-                  enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/usuario/ubicacion/__${session.usuariosession.id}__}" method="post"
+                      enctype="multipart/form-data">
 
-                <input hidden th:value="${session.usuariosession.id}" name="id">
-                <select id="pais" name="pais" class="form-select form-floating mb-3"
-                        aria-label="Ejemplo de select predeterminado">
-                    <option value="" selected="">Selecionar país</option>
-                    <option th:each="pais : ${paises}"
-                            th:value="${pais}"
-                            th:text="${pais}"
-                            th:selected="${session.usuariosession.ubicacion != null ? pais == session.usuariosession.ubicacion.pais : pais}">
+                    <input hidden th:value="${session.usuariosession.id}" name="id">
+                    <select id="pais" name="pais" class="form-select form-floating mb-3"
+                            aria-label="Ejemplo de select predeterminado">
+                        <option value="" selected="">Selecionar país</option>
+                        <option th:each="pais : ${paises}"
+                                th:value="${pais}"
+                                th:text="${pais}"
+                                th:selected="${session.usuariosession.ubicacion != null ? pais == session.usuariosession.ubicacion.pais : pais}">
 
-                    </option>
-                </select>
-                <select id="provincia" name="provincia" class="form-select form-floating mb-3"
-                        aria-label="Ejemplo de select predeterminado">
-                    <option value="" selected>Selecionar provincia</option>
-                    <option th:each="provincia : ${provincias}"
-                            th:value="${provincia}"
-                            th:text="${provincia}"
-                            th:selected="${session.usuariosession.ubicacion != null ? provincia == session.usuariosession.ubicacion.provincia : provincia}">>
+                        </option>
+                    </select>
+                    <select id="provincia" name="provincia" class="form-select form-floating mb-3"
+                            aria-label="Ejemplo de select predeterminado">
+                        <option value="" selected>Selecionar provincia</option>
+                        <option th:each="provincia : ${provincias}"
+                                th:value="${provincia}"
+                                th:text="${provincia}"
+                                th:selected="${session.usuariosession.ubicacion != null ? provincia == session.usuariosession.ubicacion.provincia : provincia}">
+                            >
 
-                    </option>
-                </select>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="localidad" name="localidad" placeholder="localidad"
-                           th:value="${session.usuariosession.ubicacion.localidad != null ? session.usuariosession.ubicacion.localidad : ''}">
-                    <label for="localidad">Localidad</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="codigoPostal" name="codigoPostal"
-                           placeholder="codigoPostal"
-                           th:value="${session.usuariosession.ubicacion != null ? session.usuariosession.ubicacion.codigoPostal : ''}">
-                    <label for="codigoPostal">Codigo Postal</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="domicilio" name="domicilio" placeholder="domicilio"
-                           th:value="${session.usuariosession.ubicacion != null ? session.usuariosession.ubicacion.domicilio : ''}">
-                    <label for="domicilio">Domicilio</label>
-                </div>
-                <button class="btn btn-primary" type="submit">Guardar</button>
-                <a class="btn btn-secondary" th:href="@{/}">Volver</a>
-            </form>
+                        </option>
+                    </select>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="localidad" name="localidad" placeholder="localidad"
+                               th:value="${session.usuariosession.ubicacion.localidad != null ? session.usuariosession.ubicacion.localidad : ''}">
+                        <label for="localidad">Localidad</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="codigoPostal" name="codigoPostal"
+                               placeholder="codigoPostal"
+                               th:value="${session.usuariosession.ubicacion != null ? session.usuariosession.ubicacion.codigoPostal : ''}">
+                        <label for="codigoPostal">Codigo Postal</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="domicilio" name="domicilio" placeholder="domicilio"
+                               th:value="${session.usuariosession.ubicacion != null ? session.usuariosession.ubicacion.domicilio : ''}">
+                        <label for="domicilio">Domicilio</label>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Guardar</button>
+                    <a class="btn btn-secondary" th:href="@{/}">Volver</a>
+                </form>
+            </div>
         </div>
     </div>
+
 </div>
-
-
 <footer th:replace="../layout/footer :: footer"></footer>
 <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
