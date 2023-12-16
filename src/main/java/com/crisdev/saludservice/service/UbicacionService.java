@@ -21,6 +21,7 @@ public class UbicacionService {
 
     public Ubicacion crearUbicacion(Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) {
 
+
         Ubicacion ubicacion = new Ubicacion();
         ubicacion.setPais(pais);
         ubicacion.setProvincia(provincia);

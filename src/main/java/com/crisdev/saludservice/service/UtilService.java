@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Pais;
 import com.crisdev.saludservice.enums.Provincia;
@@ -7,38 +8,13 @@ import com.crisdev.saludservice.exception.MiException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
 public class UtilService {
 
-    public void validarRegistroProfesional(String nombre, String apellido, String fecha, Long dni, Especialidad especialidad, Long matricula, String email, String password, String password2) throws MiException {
-
-        validarRegistro(nombre, apellido, fecha, dni, email, password, password2);
-
-        if (matricula == null) {
-            throw new MiException("El número de matrícula no puede estar vacío");
-        }
-        if (especialidad == null) {
-            throw new MiException("Debe seleccionar su especialidad médica");
-        }
-    }
-
-    public LocalDate formatearFecha(String fechaStr) throws MiException {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fecha;
-
-        try {
-            fecha = LocalDate.parse(fechaStr, formatter);
-        } catch (Exception e) {
-            throw new MiException("Error al dar formato a la fecha " + e.getMessage());
-        }
-
-        return fecha;
-    }
-
-    public void validarRegistro(String nombre, String apellido, String fecha, Long dni, String email, String password, String password2) throws MiException {
+    public void validarUsuario(String nombre, String apellido, String fecha, Long dni, String email) throws MiException {
         if (nombre.isEmpty()) {
             throw new MiException("El nombre no puede estar vacío");
         }
@@ -54,6 +30,8 @@ public class UtilService {
         if (email.isEmpty()) {
             throw new MiException("El email no puede estar vacío");
         }
+    }
+    public void validarPassword(String password, String password2) throws MiException {
         if (password == null || password.length() < 6) {
             throw new MiException("La contraseña debe contener 6 dígitos");
         }
@@ -61,23 +39,35 @@ public class UtilService {
             throw new MiException("Las contraseñas no coinciden");
         }
     }
+    public void validarProfesional (Especialidad especialidad, Long matricula) throws MiException {
 
-    public void validarEdit(String nombre, String apellido, Long dni, String email) throws MiException {
-        if (nombre.isEmpty()) {
-            throw new MiException("El nombre no puede estar vacío");
+        if (matricula == null) {
+            throw new MiException("El número de matrícula no puede estar vacío");
         }
-        if (apellido.isEmpty()) {
-            throw new MiException("El apellido no puede estar vacío");
+        if (especialidad == null) {
+            throw new MiException("Debe seleccionar su especialidad médica");
         }
-        if (dni == null) {
-            throw new MiException("El dni no puede estar vacío");
+    }
+    public LocalDate formatearFecha(String fechaStr) throws MiException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha;
+
+        try {
+            fecha = LocalDate.parse(fechaStr, formatter);
+        } catch (Exception e) {
+            throw new MiException("Error al dar formato a la fecha " + e.getMessage());
         }
-        if (email.isEmpty()) {
-            throw new MiException("El email no puede estar vacío");
-        }
+
+        return fecha;
+    }
+    public LocalTime formatearHora(String hora) {
+        // Crear un formateador para el formato de la cadena de tiempo
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        // Convertir la cadena de tiempo a LocalTime
+        return LocalTime.parse(hora, formatter);
 
     }
-
     public void validarUbicacion(Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) throws MiException {
 
         if (pais == null) {
@@ -95,6 +85,23 @@ public class UtilService {
         if (domicilio.isEmpty()) {
             throw new MiException("El domicilio no puede estar vacío");
         }
+    }
+    public void validarHorario(DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
+
+        System.out.println("TEST VALIDAR");
+        System.out.println("dia = " + dia);
+        System.out.println("horaEntrada = " + horaEntrada);
+        System.out.println("horaSalida = " + horaSalida);
+        if (dia == null) {
+            throw new MiException("Debe seleccionar un día");
+        }
+        if (horaEntrada.isEmpty()) {
+            throw new MiException("Debe seleccionar la hora de entrada");
+        }
+        if (horaSalida.isEmpty()) {
+            throw new MiException("Debe seleccionar la hora de salida");
+        }
+
     }
 }
 

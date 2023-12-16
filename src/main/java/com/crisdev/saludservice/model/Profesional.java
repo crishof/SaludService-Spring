@@ -19,6 +19,4 @@ public class Profesional extends Usuario {
     private Imagen diploma;
     @OneToMany
     private List<HorarioLaboral> horarioLaboral;
-
-
 }

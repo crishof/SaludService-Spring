@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -42,8 +43,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarUsuario(@PathVariable String id, @RequestParam(required = false) String error,
-                                @RequestParam(required = false) String exito, ModelMap model) throws MiException {
+    public String editarUsuario(@PathVariable String id, @RequestParam(required = false) String error, @RequestParam(required = false) String exito, ModelMap model) throws MiException {
 
         Usuario usuario = usuarioService.buscarUsuario(id);
         model.addAttribute("usuario", usuario);
@@ -57,13 +57,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/editar/{id}")
-    public String editarUsuario(@PathVariable String id, @RequestParam String nombre, @RequestParam String apellido,
-                                @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model,
-                                RedirectAttributes redirectAttributes) {
+    public String editarUsuario(@PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, String fechaNacimientoStr, @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes) {
 
         try {
-            utilService.validarEdit(nombre, apellido, dni, email);
-            usuarioService.editarUsuario(id, nombre, dni, apellido, email);
+            utilService.validarUsuario(nombre, apellido, fechaNacimientoStr, dni, email);
+            LocalDate fechaNacimiento = utilService.formatearFecha(fechaNacimientoStr);
+            usuarioService.editarUsuario(id, nombre, dni, apellido, email, fechaNacimiento);
             redirectAttributes.addAttribute("exito", "Usuario modificado con éxito");
         } catch (MiException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
@@ -89,22 +88,23 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/{id}")
-    public String actualizar(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre,
-                             @RequestParam String apellido, @RequestParam(required = false) Long dni,
-                             @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String actualizar(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, String fechaNacimientoStr, @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         model.put("usuario", session);
         try {
-            utilService.validarEdit(nombre, apellido, dni, email);
+            utilService.validarUsuario(nombre, apellido, fechaNacimientoStr, dni, email);
 
             Usuario usuario = (Usuario) session.getAttribute("usuariosession");
             usuario.setNombre(nombre);
             usuario.setApellido(apellido);
+
+            LocalDate fechaNacimiento = utilService.formatearFecha(fechaNacimientoStr);
+            usuario.setFechaNacimiento(fechaNacimiento);
             usuario.setDni(dni);
             usuario.setEmail(email);
             session.setAttribute("usuariosession", usuario);
 
-            usuarioService.editarUsuario(id, nombre, dni, apellido, email);
+            usuarioService.editarUsuario(id, nombre, dni, apellido, email, fechaNacimiento);
             redirectAttributes.addAttribute("exito", "Usuario modificado con éxito");
         } catch (MiException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
@@ -136,10 +136,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/ubicacion/{id}")
-    public String actualizarUbicacion(@PathVariable String id, @RequestParam(required = false) Pais pais,
-                                      @RequestParam(required = false) Provincia provincia, @RequestParam String localidad,
-                                      @RequestParam String codigoPostal, @RequestParam String domicilio,
-                                      ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String actualizarUbicacion(@PathVariable String id, @RequestParam(required = false) Pais pais, @RequestParam(required = false) Provincia provincia, @RequestParam String localidad, @RequestParam String codigoPostal, @RequestParam String domicilio, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         model.put("usuario", session);
         try {

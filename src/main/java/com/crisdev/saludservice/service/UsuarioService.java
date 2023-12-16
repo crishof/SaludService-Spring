@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findAll();
     }
 
-    public void editarUsuario(String id, String nombre, Long dni, String apellido, String email) throws MiException {
+    public void editarUsuario(String id, String nombre, Long dni, String apellido, String email, LocalDate fechaNacimiento) throws MiException {
 
         Optional<Usuario> respuesta = usuarioRepository.findById(id);
 
@@ -88,14 +89,15 @@ public class UsuarioService implements UserDetailsService {
             usuario.setApellido(apellido);
             usuario.setDni(dni);
             usuario.setEmail(email);
+            usuario.setFechaNacimiento(fechaNacimiento);
             usuarioRepository.save(usuario);
         } else {
             throw new MiException("Usuario no encontrado");
         }
     }
 
-    public void modificar(MultipartFile archivo, String idUsuario, String nombre, String apellido, Long dni, String email) throws MiException {
-        utilService.validarEdit(nombre, apellido, dni, email);
+    public void modificar(MultipartFile archivo, String idUsuario, String nombre, String apellido, String fechaNacimientoStr, Long dni, String email) throws MiException {
+        utilService.validarUsuario(nombre, apellido, fechaNacimientoStr, dni, email);
 
         Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
         if (respuesta.isPresent()) {

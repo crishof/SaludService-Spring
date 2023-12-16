@@ -13,12 +13,9 @@
     <nav th:replace="../layout/navbar :: navbar"></nav>
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-    <h1>Dashboard Admin</h1>
-    <div sec:authorize="hasRole('ROLE_ADMIN')">
-        <p>Bienvenido, administrador.</p>
-    </div>
 
-    <a class="btn btn-primary" th:href="@{/usuario/listarUsuarios}">Listar Usuarios</a>
+    <h3>TURNO CREAR</h3>
+
 </div>
 <footer th:replace="../layout/footer :: footer"></footer>
 <script

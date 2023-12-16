@@ -1,3 +1,13 @@
 <header th:fragment="header">
     <h2>HEADER</h2>
+
+    <a th:href="@{/registroPaciente}">Registro</a>
+        <a th:href="@{/login}">Login</a>
+        <form method="POST" th:action="@{/logout}">
+            <a href="#" onclick="this.parentNode.submit();">
+                Logout
+            </a>
+        </form>
+
+
 </header>

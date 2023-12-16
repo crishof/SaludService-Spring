@@ -1,3 +1,17 @@
 <footer th:fragment="footer">
-    <h2>FOOTER</h2>
+    <div class="container">
+        <div class="col-6">
+            <h5>Simulador de registros</h5>
+            <ul>
+                <li>
+                    <p>Crear profesional <span>
+                <a th:href="@{/util/profesionalRandom}"><i class="fa fa-database"></i></a></span></p>
+                </li>
+                <li>
+                    <p>Crear paciente <span>
+                <a th:href="@{/util/pacienteRandom}"><i class="fa fa-database"></i></a></span></p>
+                </li>
+            </ul>
+        </div>
+    </div>
 </footer>

@@ -1,17 +1,29 @@
 package com.crisdev.saludservice.controller;
 
+import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
+import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Profesional;
+import com.crisdev.saludservice.model.Usuario;
+import com.crisdev.saludservice.service.HorarioLaboralService;
 import com.crisdev.saludservice.service.ProfesionalService;
+import com.crisdev.saludservice.service.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
+import javax.swing.text.html.HTMLDocument;
 import java.util.List;
+
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Controller
 @RequestMapping("/profesional")
@@ -19,6 +31,12 @@ public class ProfesionalController {
 
     @Autowired
     ProfesionalService profesionalService;
+
+    @Autowired
+    HorarioLaboralService horarioLaboralService;
+
+    @Autowired
+    UtilService utilService;
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {
@@ -37,5 +55,63 @@ public class ProfesionalController {
     @GetMapping("/dashboard")
     public String panel() {
         return "dashboard_profesional";
+    }
+
+
+    @GetMapping("/horario")
+    public String crearHorario(ModelMap model, @RequestParam(required = false) String error,
+                               @RequestParam(required = false) String exito, HttpSession session) {
+
+        // Obtener el nombre de usuario del contexto de seguridad
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        // Buscar el Profesional asociado con el nombre de usuario
+        Profesional profesional = profesionalService.buscarPorEmail(email);
+        model.addAttribute("profesional", profesional);
+
+        if (profesional != null) {
+            // El Profesional se encontró, puedes continuar con tu lógica
+            if (error != null) {
+                model.put("error", error);
+            }
+            if (exito != null) {
+                model.put("exito", exito);
+            }
+
+            DiaSemana[] dias = DiaSemana.values();
+            model.addAttribute("dias", dias);
+
+            return "profesional_horario";
+        } else {
+            model.put("error", "No se encontró el perfil de profesional para el usuario logueado.");
+            return "profesional_horario";
+        }
+    }
+
+    @PostMapping("/horario/{id}")
+    public String crearHorario(@PathVariable String id, DiaSemana dia, String horaEntrada, String horaSalida, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
+
+        System.out.println("TEST POST ENTRADA");
+        System.out.println("dia = " + dia);
+        System.out.println("horaEntrada = " + horaEntrada);
+        System.out.println("horaSalida = " + horaSalida);
+        try {
+            utilService.validarHorario(dia, horaEntrada, horaSalida);
+
+            Profesional profesional = profesionalService.buscarPorId(id);
+
+            var horario = horarioLaboralService.crearHorario(profesional, dia, horaEntrada, horaSalida);
+
+            profesionalService.agregarHorario(profesional, horario);
+
+            redirectAttributes.addAttribute("exito", "Horario agregado con éxito");
+
+        } catch (MiException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+
+            return "redirect:/profesional/horario";
+        }
+        return "redirect:/profesional/horario";
     }
 }
