@@ -16,7 +16,7 @@
 
     <div class="card">
         <div class="card-body">
-            <form th:action="@{/profesional/horario/__${id}__}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/profesional/horario/__${session.usuariosession.id}__}" method="post" enctype="multipart/form-data">
                 <input hidden th:value="${session.usuariosession.id}" name="id">
 
                 <select id="dia" name="dia" class="form-select form-floating mb-3"

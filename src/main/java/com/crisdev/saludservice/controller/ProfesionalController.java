@@ -71,17 +71,20 @@ public class ProfesionalController {
     public String crearHorario(@PathVariable String id, String dia, String horaEntrada, String horaSalida, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         System.out.println("TEST POST ENTRADA");
+        System.out.println("dia = " + dia);
+        System.out.println("horaEntrada = " + horaEntrada);
+        System.out.println("horaSalida = " + horaSalida);
         try {
             utilService.validarHorario(dia, horaEntrada, horaSalida);
 
-            Usuario usuario = (Usuario) session.getAttribute("usuariosession");
+            Profesional profesional = (Profesional) session.getAttribute("usuariosession");
 
-            var horario = horarioLaboralService.crearHorario(id, dia, horaEntrada, horaSalida);
+            var horario = horarioLaboralService.crearHorario(profesional, dia, horaEntrada, horaSalida);
 
-            profesionalService.agregarHorario(id, horario);
+            profesionalService.agregarHorario(profesional, horario);
 
+            redirectAttributes.addAttribute("exito", "Horario agregado con éxito");
 
-            redirectAttributes.addAttribute("exito", "Usuario modificado con éxito");
         } catch (MiException e) {
             redirectAttributes.addAttribute("error", e.getMessage());
 

@@ -1,16 +1,12 @@
 package com.crisdev.saludservice.model;
 
 import com.crisdev.saludservice.enums.DiaSemana;
-import com.crisdev.saludservice.repository.ProfesionalRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalTime;
 
 @Data
@@ -24,13 +20,15 @@ public class HorarioLaboral {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
-    private String diaSemana;
+    @Enumerated(EnumType.STRING)
+    private DiaSemana diaSemana;
     private LocalTime horaEntrada;
     private LocalTime horaSalida;
-    @ManyToOne
-    private Profesional profesional;
 
-
-    public HorarioLaboral(String dia, LocalTime entrada, LocalTime salida, Profesional profesional) {
+    @Override
+    public String toString() {
+        return diaSemana +
+                ", De: " + horaEntrada +
+                " a " + horaSalida;
     }
 }

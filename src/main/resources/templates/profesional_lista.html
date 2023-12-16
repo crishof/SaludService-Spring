@@ -25,6 +25,7 @@
                 <th scope="col">Nombre</th>
                 <th scope="col">Precio</th>
                 <th scope="col">Valoración</th>
+                <th scope="col">Horario</th>
                 <th scope="col">Provincia</th>
                 <th scope="col">Localidad</th>
                 <th scope="col">Acciones</th>
@@ -41,6 +42,7 @@
                 <td th:text="${profesional.nombre}"></td>
                 <td>Precio</td>
                 <td>Valoracion</td>
+                <td th:text="${profesional.horarioLaboral}"></td>
                 <td th:text="${profesional.ubicacion.provincia}"></td>
                 <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
                 <td>Acciones</td>

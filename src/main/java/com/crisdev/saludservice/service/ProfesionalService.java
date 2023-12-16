@@ -70,6 +70,7 @@ public class ProfesionalService {
 
         profesional.setMatricula(matricula);
         profesional.setEspecialidad(especialidad);
+        profesional.setHorarioLaboral(new ArrayList<>());
 
         profesionalRepository.save(profesional);
     }
@@ -99,25 +100,35 @@ public class ProfesionalService {
         }
     }
 
-    public void agregarHorario(String id, HorarioLaboral horario) {
+    public void agregarHorario(Profesional profesional, HorarioLaboral horario) {
 
         System.out.println("TEST AGREGAR HORARIO");
-        Optional<Profesional> respuesta = profesionalRepository.findById(id);
 
-        if (respuesta.isPresent()) {
-            Profesional profesional = respuesta.get();
-            System.out.println("TEST AGREGAR HORARIO EN EL IF");
-            if (profesional.getHorarioLaboral() == null) {
-                var horarioLaboral = new ArrayList<HorarioLaboral>();
-                horarioLaboral.add(horario);
-                profesional.setHorarioLaboral(horarioLaboral);
-                profesionalRepository.save(profesional);
-            } else {
-                System.out.println("TEST AGREGAR HORARIO EN EL ELSE");
-                profesional.getHorarioLaboral().add(horario);
-                profesionalRepository.save(profesional);
+        var horas = new ArrayList<HorarioLaboral>();
+        horas.add(horario);
+
+        for (HorarioLaboral laboral : horas) {
+            System.out.println("dia = " + laboral.getDiaSemana());
+            System.out.println("entrada = " + laboral.getHoraEntrada());
+            System.out.println("salida = " + laboral.getHoraSalida());
+        }
+
+        if (profesional.getHorarioLaboral() == null) {
+            var horarioLaboral = new ArrayList<HorarioLaboral>();
+            horarioLaboral.add(horario);
+            for (HorarioLaboral laboral : horarioLaboral) {
+                System.out.println("dia = " + laboral.getDiaSemana());
+                System.out.println("entrada = " + laboral.getHoraEntrada());
+                System.out.println("salida = " + laboral.getHoraSalida());
             }
+            profesional.setHorarioLaboral(horarioLaboral);
+            profesionalRepository.save(profesional);
+        } else {
+            System.out.println("TEST AGREGAR HORARIO EN EL ELSE");
+            profesional.getHorarioLaboral().add(horario);
+            profesionalRepository.save(profesional);
         }
     }
 }
+
 

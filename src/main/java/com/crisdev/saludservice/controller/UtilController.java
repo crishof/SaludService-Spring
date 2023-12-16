@@ -3,6 +3,7 @@ package com.crisdev.saludservice.controller;
 import com.crisdev.saludservice.enums.*;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.*;
+import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.service.*;
@@ -40,6 +41,8 @@ public class UtilController {
 
     @Autowired
     ImagenService imagenService;
+    @Autowired
+    HorarioLaboralRepository horarioLaboralRepository;
     Random random = new Random();
 
     @GetMapping("/profesionalRandom")
@@ -66,6 +69,8 @@ public class UtilController {
         profesional.setEspecialidad(especialidad);
         profesional.setDiploma(null);
         profesional.setRol(Rol.PROFESIONAL);
+
+        profesional.setHorarioLaboral(crearHorario());
 
         profesionalRepository.save(profesional);
 
@@ -149,33 +154,48 @@ public class UtilController {
         return ubicacionService.crearUbicacion(pais, provincia, localidad, direccion, codigoPostal);
     }
 
-    public HorarioLaboral crearHorario() {
+    public List<HorarioLaboral> crearHorario() {
 
-        List<DiaSemana> diasDisponibles = new ArrayList<>();
-        DiaSemana[] diasSemana = DiaSemana.values();
-        for (int i = 0; i < 3; i++) {
-            DiaSemana diaAleatorio = diasSemana[random.nextInt(diasSemana.length)];
-            diasDisponibles.add(diaAleatorio);
-        }
+        List<HorarioLaboral> horarioLista = new ArrayList<>();
+
+        DiaSemana dia = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
+        DiaSemana dia2 = null;
+        do {
+            dia2 = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
+        } while (dia2 == dia);
 
         LocalTime[] horariosEntrada = new LocalTime[17];
+        LocalTime[] horariosSalida = new LocalTime[17];
+
         for (int i = 0; i < 17; i++) {
             horariosEntrada[i] = LocalTime.of(8 + i / 2, (i % 2) * 30);
-        }
-
-        LocalTime[] horariosSalida = new LocalTime[17];
-        for (int i = 0; i < 17; i++) {
             horariosSalida[i] = LocalTime.of(12 + i / 2, (i % 2) * 30);
         }
 
         LocalTime horarioEntrada = horariosEntrada[random.nextInt(horariosEntrada.length)];
         LocalTime horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
 
-        int valorAleatorio = random.nextInt(36) + 15;
-        int precioConsulta = Math.round(valorAleatorio * 100.0f / 100) * 100;
+        do {
+            horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
+        } while (horarioSalida.getHour() <= horarioEntrada.getHour());
 
         HorarioLaboral horario = new HorarioLaboral();
-        return horario;
+        HorarioLaboral horario2 = new HorarioLaboral();
+
+        horario.setDiaSemana(dia);
+        horario.setHoraEntrada(horarioEntrada);
+        horario.setHoraSalida(horarioSalida);
+        horario2.setDiaSemana(dia2);
+        horario2.setHoraEntrada(horarioEntrada);
+        horario2.setHoraSalida(horarioSalida);
+
+        horarioLista.add(horarioLaboralRepository.save(horario));
+        horarioLista.add(horarioLaboralRepository.save(horario2));
+
+        return horarioLista;
+
     }
+//        int valorAleatorio = random.nextInt(36) + 15;
+//        int precioConsulta = Math.round(valorAleatorio * 100.0f / 100) * 100;
 
 }
