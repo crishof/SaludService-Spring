@@ -22,4 +22,6 @@ public interface ProfesionalRepository extends JpaRepository<Profesional, String
 
     @Query("SELECT p FROM Profesional p WHERE p.email = :email")
     Profesional buscarPorEmail(@Param("email") String email);
+
+
 }

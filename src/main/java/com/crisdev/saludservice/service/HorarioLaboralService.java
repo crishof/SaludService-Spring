@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Profesional;
@@ -23,7 +24,7 @@ public class HorarioLaboralService {
     @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
 
-    public HorarioLaboral crearHorario(Profesional profesional, String dia, String horaEntrada, String horaSalida) throws MiException {
+    public HorarioLaboral crearHorario(Profesional profesional, DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
 
 
         System.out.println("TEST CREAR HORARIO");
@@ -32,12 +33,15 @@ public class HorarioLaboralService {
         System.out.println("horaEntrada = " + horaEntrada);
         System.out.println("horaSalida = " + horaSalida);
 
-            LocalTime entrada = utilService.formatearHora(horaEntrada);
-            LocalTime salida = utilService.formatearHora(horaSalida);
-            HorarioLaboral horario = new HorarioLaboral();
-            System.out.println("TEST CREAR HORARIO EN EL IF");
+        LocalTime entrada = utilService.formatearHora(horaEntrada);
+        LocalTime salida = utilService.formatearHora(horaSalida);
+        HorarioLaboral horario = new HorarioLaboral();
+        horario.setHoraEntrada(entrada);
+        horario.setHoraSalida(salida);
+        horario.setDiaSemana(dia);
+        System.out.println("TEST CREAR HORARIO EN EL IF");
 
-            return horarioLaboralRepository.save(horario);
+        return horarioLaboralRepository.save(horario);
 
 
     }

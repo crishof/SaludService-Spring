@@ -13,10 +13,34 @@
     <nav th:replace="../layout/navbar :: navbar"></nav>
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
+    <div class="container">
+        <div class="col">
+            <div class="row">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Dia</th>
+                        <th scope="col">Entrada</th>
+                        <th scope="col">Salida</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="horario : ${profesional.getHorarioLaboral()}">
+                    <tr>
+                        <td th:text="${horario.diaSemana}"></td>
+                        <td th:text="${horario.horaEntrada}"></td>
+                        <td th:text="${horario.horaSalida}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 
     <div class="card">
         <div class="card-body">
-            <form th:action="@{/profesional/horario/__${session.usuariosession.id}__}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/profesional/horario/__${session.usuariosession.id}__}" method="post"
+                  enctype="multipart/form-data">
                 <input hidden th:value="${session.usuariosession.id}" name="id">
 
                 <select id="dia" name="dia" class="form-select form-floating mb-3"

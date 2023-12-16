@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Pais;
 import com.crisdev.saludservice.enums.Provincia;
@@ -85,13 +86,13 @@ public class UtilService {
             throw new MiException("El domicilio no puede estar vacío");
         }
     }
-    public void validarHorario(String dia, String horaEntrada, String horaSalida) throws MiException {
+    public void validarHorario(DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
 
         System.out.println("TEST VALIDAR");
         System.out.println("dia = " + dia);
         System.out.println("horaEntrada = " + horaEntrada);
         System.out.println("horaSalida = " + horaSalida);
-        if (dia.isEmpty()) {
+        if (dia == null) {
             throw new MiException("Debe seleccionar un día");
         }
         if (horaEntrada.isEmpty()) {

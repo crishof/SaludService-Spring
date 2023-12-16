@@ -102,17 +102,6 @@ public class ProfesionalService {
 
     public void agregarHorario(Profesional profesional, HorarioLaboral horario) {
 
-        System.out.println("TEST AGREGAR HORARIO");
-
-        var horas = new ArrayList<HorarioLaboral>();
-        horas.add(horario);
-
-        for (HorarioLaboral laboral : horas) {
-            System.out.println("dia = " + laboral.getDiaSemana());
-            System.out.println("entrada = " + laboral.getHoraEntrada());
-            System.out.println("salida = " + laboral.getHoraSalida());
-        }
-
         if (profesional.getHorarioLaboral() == null) {
             var horarioLaboral = new ArrayList<HorarioLaboral>();
             horarioLaboral.add(horario);
@@ -128,6 +117,16 @@ public class ProfesionalService {
             profesional.getHorarioLaboral().add(horario);
             profesionalRepository.save(profesional);
         }
+    }
+
+    public Profesional buscarPorId(String id) {
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+        return respuesta.orElse(null);
+    }
+
+    public Profesional buscarPorEmail(String email) {
+
+        return profesionalRepository.buscarPorEmail(email);
     }
 }
 
