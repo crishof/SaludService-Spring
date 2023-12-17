@@ -10,12 +10,11 @@ import java.util.List;
 
 @Repository
 public interface HorarioLaboralRepository extends JpaRepository<HorarioLaboral, String> {
-//    List<HorarioLaboral> listarPorIdProfesional(String id);
 
     @Query(value = "SELECT hl.* FROM horario_laboral hl " +
             "JOIN usuario_horario_laboral uhl ON hl.id = uhl.horario_laboral_id " +
             "WHERE uhl.profesional_id = :profesionalId " +
-            "ORDER BY hl.dia_semana", nativeQuery = true)
+            "ORDER BY FIELD(hl.dia_semana, 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES')", nativeQuery = true)
     List<HorarioLaboral> obtenerHorariosPorProfesionalOrdenadosNativo(@Param("profesionalId") String id);
 
 }
