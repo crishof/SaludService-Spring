@@ -10,7 +10,7 @@
 <body>
 <div class="main-content">
     <header th:replace="../layout/header :: header"></header>
-    <nav th:replace="../layout/navbar :: navbar"></nav>
+
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
     <div class="container">
@@ -24,7 +24,8 @@
                         <th scope="col">Salida</th>
                     </tr>
                     </thead>
-                    <tbody th:each="horario : ${profesional.getHorarioLaboral()}">
+                    <tbody th:each="horario : ${horarios}">
+                    <!--                    <tbody th:each="horario : ${profesional.getHorarioLaboral()}">-->
                     <tr>
                         <td th:text="${horario.diaSemana}"></td>
                         <td th:text="${horario.horaEntrada}"></td>

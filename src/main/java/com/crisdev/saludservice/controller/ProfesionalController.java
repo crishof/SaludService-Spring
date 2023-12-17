@@ -62,16 +62,16 @@ public class ProfesionalController {
     public String crearHorario(ModelMap model, @RequestParam(required = false) String error,
                                @RequestParam(required = false) String exito, HttpSession session) {
 
-        // Obtener el nombre de usuario del contexto de seguridad
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        // Buscar el Profesional asociado con el nombre de usuario
         Profesional profesional = profesionalService.buscarPorEmail(email);
         model.addAttribute("profesional", profesional);
 
+        List<HorarioLaboral> horarios = horarioLaboralService.listarHorariosProfesional(profesional.getId());
+        model.addAttribute("horarios", horarios);
+
         if (profesional != null) {
-            // El Profesional se encontró, puedes continuar con tu lógica
             if (error != null) {
                 model.put("error", error);
             }
@@ -92,16 +92,14 @@ public class ProfesionalController {
     @PostMapping("/horario/{id}")
     public String crearHorario(@PathVariable String id, DiaSemana dia, String horaEntrada, String horaSalida, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
-        System.out.println("TEST POST ENTRADA");
-        System.out.println("dia = " + dia);
-        System.out.println("horaEntrada = " + horaEntrada);
-        System.out.println("horaSalida = " + horaSalida);
         try {
             utilService.validarHorario(dia, horaEntrada, horaSalida);
 
             Profesional profesional = profesionalService.buscarPorId(id);
 
-            var horario = horarioLaboralService.crearHorario(profesional, dia, horaEntrada, horaSalida);
+            utilService.validarHorarioProfesional(profesional, dia, horaEntrada, horaSalida);
+
+            var horario = horarioLaboralService.crearHorario(dia, horaEntrada, horaSalida);
 
             profesionalService.agregarHorario(profesional, horario);
 

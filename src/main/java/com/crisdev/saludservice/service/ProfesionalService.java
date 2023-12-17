@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
@@ -8,7 +9,6 @@ import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,9 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -27,14 +25,32 @@ public class ProfesionalService {
     final UtilService utilService;
     final ProfesionalRepository profesionalRepository;
     final ImagenService imagenService;
-
-    @Autowired
+    final
     UbicacionService ubicacionService;
 
-    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService) {
+    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService, UbicacionService ubicacionService) {
         this.utilService = utilService;
         this.profesionalRepository = profesionalRepository;
         this.imagenService = imagenService;
+        this.ubicacionService = ubicacionService;
+    }
+
+    public static List<HorarioLaboral> ordenarPorDiaSemana(List<HorarioLaboral> horarios) {
+        // Define un comparador personalizado basado en el orden de los días de la semana
+        Comparator<HorarioLaboral> comparador = Comparator.comparingInt(horario -> {
+            DiaSemana diaSemana = horario.getDiaSemana();
+            // Asigna un valor numérico a cada día de la semana para la comparación
+            return switch (diaSemana) {
+                case LUNES -> 1;
+                case MARTES -> 2;
+                case MIERCOLES -> 3;
+                case JUEVES -> 4;
+                case VIERNES -> 5;
+            };
+        });
+        // Ordena la lista usando el comparador
+        horarios.sort(comparador);
+        return horarios;
     }
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
@@ -86,6 +102,47 @@ public class ProfesionalService {
         return profesionalRepository.findByEspecialidadAndSort(especialidad, columna, sort);
     }
 
+    public void agregarHorario(Profesional profesional, HorarioLaboral horario) {
+
+        List<HorarioLaboral> horarios = profesional.getHorarioLaboral();
+
+        if (horarios == null) {
+            var horarioLaboral = new ArrayList<HorarioLaboral>();
+            horarioLaboral.add(horario);
+            profesional.setHorarioLaboral(horarioLaboral);
+        } else {
+            DiaSemana nuevoDia = horario.getDiaSemana();
+            int indiceExistente = -1;
+
+            for (int i = 0; i < horarios.size(); i++) {
+                DiaSemana diaExistente = horarios.get(i).getDiaSemana();
+                if (diaExistente.equals(nuevoDia)) {
+                    indiceExistente = i;
+                    break;
+                }
+            }
+
+            int indiceInsercion = 0;
+            while (indiceInsercion < horarios.size() && horarios.get(indiceInsercion).getDiaSemana().compareTo(nuevoDia) < 0) {
+                indiceInsercion++;
+            }
+            horarios.add(indiceInsercion, horario);
+            profesional.setHorarioLaboral(horarios);
+        }
+        profesionalRepository.save(profesional);
+
+    }
+
+    public Profesional buscarPorId(String id) {
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+        return respuesta.orElse(null);
+    }
+
+    public Profesional buscarPorEmail(String email) {
+
+        return profesionalRepository.buscarPorEmail(email);
+    }
+
     public void modificarProfesional(String id, String nombre, String apellido, String email) throws MiException {
 
         Optional<Profesional> respuesta = profesionalRepository.findById(id);
@@ -98,35 +155,6 @@ public class ProfesionalService {
         } else {
             throw new MiException("Profesional no encontrado");
         }
-    }
-
-    public void agregarHorario(Profesional profesional, HorarioLaboral horario) {
-
-        if (profesional.getHorarioLaboral() == null) {
-            var horarioLaboral = new ArrayList<HorarioLaboral>();
-            horarioLaboral.add(horario);
-            for (HorarioLaboral laboral : horarioLaboral) {
-                System.out.println("dia = " + laboral.getDiaSemana());
-                System.out.println("entrada = " + laboral.getHoraEntrada());
-                System.out.println("salida = " + laboral.getHoraSalida());
-            }
-            profesional.setHorarioLaboral(horarioLaboral);
-            profesionalRepository.save(profesional);
-        } else {
-            System.out.println("TEST AGREGAR HORARIO EN EL ELSE");
-            profesional.getHorarioLaboral().add(horario);
-            profesionalRepository.save(profesional);
-        }
-    }
-
-    public Profesional buscarPorId(String id) {
-        Optional<Profesional> respuesta = profesionalRepository.findById(id);
-        return respuesta.orElse(null);
-    }
-
-    public Profesional buscarPorEmail(String email) {
-
-        return profesionalRepository.buscarPorEmail(email);
     }
 }
 

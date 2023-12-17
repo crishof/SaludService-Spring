@@ -159,7 +159,7 @@ public class UtilController {
         List<HorarioLaboral> horarioLista = new ArrayList<>();
 
         DiaSemana dia = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
-        DiaSemana dia2 = null;
+        DiaSemana dia2;
         do {
             dia2 = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
         } while (dia2 == dia);
@@ -173,24 +173,19 @@ public class UtilController {
         }
 
         LocalTime horarioEntrada = horariosEntrada[random.nextInt(horariosEntrada.length)];
-        LocalTime horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
+        LocalTime horarioSalida;
 
         do {
             horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
         } while (horarioSalida.getHour() <= horarioEntrada.getHour());
 
         HorarioLaboral horario = new HorarioLaboral();
-        HorarioLaboral horario2 = new HorarioLaboral();
 
         horario.setDiaSemana(dia);
         horario.setHoraEntrada(horarioEntrada);
         horario.setHoraSalida(horarioSalida);
-        horario2.setDiaSemana(dia2);
-        horario2.setHoraEntrada(horarioEntrada);
-        horario2.setHoraSalida(horarioSalida);
 
         horarioLista.add(horarioLaboralRepository.save(horario));
-        horarioLista.add(horarioLaboralRepository.save(horario2));
 
         return horarioLista;
 
