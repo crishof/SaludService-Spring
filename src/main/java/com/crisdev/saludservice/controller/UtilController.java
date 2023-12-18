@@ -74,7 +74,7 @@ public class UtilController {
 
         profesionalRepository.save(profesional);
 
-        return "redirect:/";
+        return "redirect:/profesional/listarProfesionales";
     }
 
     @GetMapping("/pacienteRandom")

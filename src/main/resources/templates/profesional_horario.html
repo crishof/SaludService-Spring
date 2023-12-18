@@ -22,14 +22,17 @@
                         <th scope="col">Dia</th>
                         <th scope="col">Entrada</th>
                         <th scope="col">Salida</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                     </thead>
                     <tbody th:each="horario : ${horarios}">
-                    <!--                    <tbody th:each="horario : ${profesional.getHorarioLaboral()}">-->
                     <tr>
                         <td th:text="${horario.diaSemana}"></td>
                         <td th:text="${horario.horaEntrada}"></td>
                         <td th:text="${horario.horaSalida}"></td>
+                        <td>
+                            Acciones
+                        </td>
                     </tr>
                     </tbody>
                 </table>

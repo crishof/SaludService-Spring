@@ -25,5 +25,5 @@ public class Turno {
     private Profesional profesional;
     @OneToOne
     private Paciente paciente;
-    private boolean estado;
+    private boolean disponible;
 }

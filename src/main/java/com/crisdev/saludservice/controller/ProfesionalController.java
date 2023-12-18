@@ -8,6 +8,7 @@ import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.HorarioLaboralService;
 import com.crisdev.saludservice.service.ProfesionalService;
+import com.crisdev.saludservice.service.TurnoService;
 import com.crisdev.saludservice.service.UtilService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -37,6 +38,9 @@ public class ProfesionalController {
 
     @Autowired
     UtilService utilService;
+
+    @Autowired
+    TurnoService turnoService;
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {
@@ -102,6 +106,9 @@ public class ProfesionalController {
             var horario = horarioLaboralService.crearHorario(dia, horaEntrada, horaSalida);
 
             profesionalService.agregarHorario(profesional, horario);
+
+            turnoService.generarTurnos(profesional.getId(), horario);
+
 
             redirectAttributes.addAttribute("exito", "Horario agregado con éxito");
 
