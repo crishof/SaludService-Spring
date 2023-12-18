@@ -1,7 +1,64 @@
-<nav th:fragment="navbar">
+<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 
-    <h2>NAVBAR</h2>
-    <a th:href="@{/usuario/perfil}">Modificar mi Perfil</a>
-    <a th:href="@{/usuario/ubicacion}">Modificar mi Domicilio</a>
+                <!-- INICIO -->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/inicio}">Home</a>
+                </li>
 
+                <!-- REGISTRO Y LOGUIN -->
+                <li class="nav-item">
+                    <a th:href="@{/registroPaciente}" class="nav-link">Registro</a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{/login}" class="nav-link">Login</a>
+                </li>
+
+                <!-- LOGOUT -->
+                <li>
+                    <form method="POST" th:action="@{/logout}">
+                        <a class="nav-link" href="#" onclick="this.parentNode.submit();">
+                            Logout
+                        </a>
+                    </form>
+                </li>
+
+                <!-- DROPDOWN -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <ul class="dropdown-menu">
+
+                        <li><a class="dropdown-item" th:href="@{/usuario/perfil}">Modificar mi Perfil</a></li>
+                        <li><a class="dropdown-item" th:href="@{/usuario/ubicacion}">Modificar mi Domicilio</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+
+                <!-- DISABLED -->
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+
+            </ul>
+
+            <!-- SEARCHBOX -->
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
 </nav>

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,18 +21,9 @@ public class HorarioLaboralService {
     @Autowired
     ProfesionalRepository profesionalRepository;
     @Autowired
-    ProfesionalService profesionalService;
-    @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
 
-    public HorarioLaboral crearHorario(Profesional profesional, DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
-
-
-        System.out.println("TEST CREAR HORARIO");
-        System.out.println("profesional nombre = " + profesional.getNombre());
-        System.out.println("dia = " + dia);
-        System.out.println("horaEntrada = " + horaEntrada);
-        System.out.println("horaSalida = " + horaSalida);
+    public HorarioLaboral crearHorario(DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
 
         LocalTime entrada = utilService.formatearHora(horaEntrada);
         LocalTime salida = utilService.formatearHora(horaSalida);
@@ -39,11 +31,14 @@ public class HorarioLaboralService {
         horario.setHoraEntrada(entrada);
         horario.setHoraSalida(salida);
         horario.setDiaSemana(dia);
-        System.out.println("TEST CREAR HORARIO EN EL IF");
 
         return horarioLaboralRepository.save(horario);
 
+    }
 
+    public List<HorarioLaboral> listarHorariosProfesional(String id) {
+
+        return horarioLaboralRepository.obtenerHorariosPorProfesionalOrdenadosNativo(id);
     }
 
 

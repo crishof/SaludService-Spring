@@ -10,7 +10,7 @@
 <body>
 <div class="main-content">
     <header th:replace="../layout/header :: header"></header>
-    <nav th:replace="../layout/navbar :: navbar"></nav>
+
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
     <div class="container">
@@ -22,13 +22,17 @@
                         <th scope="col">Dia</th>
                         <th scope="col">Entrada</th>
                         <th scope="col">Salida</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                     </thead>
-                    <tbody th:each="horario : ${profesional.getHorarioLaboral()}">
+                    <tbody th:each="horario : ${horarios}">
                     <tr>
                         <td th:text="${horario.diaSemana}"></td>
                         <td th:text="${horario.horaEntrada}"></td>
                         <td th:text="${horario.horaSalida}"></td>
+                        <td>
+                            Acciones
+                        </td>
                     </tr>
                     </tbody>
                 </table>

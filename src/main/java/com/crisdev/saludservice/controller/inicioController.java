@@ -44,20 +44,24 @@ public class inicioController {
         return "login";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PROFESIONAL','ROLE_PACIENTE','ROLE_ADMIN')")
     @GetMapping("/inicio")
     public String inicio(HttpSession session) {
 
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
 
-        System.out.println(logueado.getRol().toString());
+        if (logueado == null || logueado.getRol() == null) {
+            return "index";
+        }
+        if (logueado.getRol().toString().equals("PACIENTE")) {
+            return "dashboard_paciente";
+        }
         if (logueado.getRol().toString().equals("ADMIN")) {
             return "redirect:/admin/dashboard";
         }
         if (logueado.getRol().toString().equals("PROFESIONAL")) {
             return "redirect:/profesional/dashboard";
         }
-        return "dashboard_paciente";
+        return "index";
     }
 
     @GetMapping("/registroProfesional")

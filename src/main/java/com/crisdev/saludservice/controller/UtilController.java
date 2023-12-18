@@ -43,6 +43,9 @@ public class UtilController {
     ImagenService imagenService;
     @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
+
+    @Autowired
+    TurnoService turnoService;
     Random random = new Random();
 
     @GetMapping("/profesionalRandom")
@@ -72,9 +75,13 @@ public class UtilController {
 
         profesional.setHorarioLaboral(crearHorario());
 
-        profesionalRepository.save(profesional);
 
-        return "redirect:/";
+        Profesional profe = profesionalRepository.save(profesional);
+
+        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(1));
+        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(0));
+
+        return "redirect:/profesional/listarProfesionales";
     }
 
     @GetMapping("/pacienteRandom")
@@ -159,7 +166,7 @@ public class UtilController {
         List<HorarioLaboral> horarioLista = new ArrayList<>();
 
         DiaSemana dia = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
-        DiaSemana dia2 = null;
+        DiaSemana dia2;
         do {
             dia2 = DiaSemana.values()[random.nextInt(DiaSemana.values().length)];
         } while (dia2 == dia);
@@ -173,7 +180,7 @@ public class UtilController {
         }
 
         LocalTime horarioEntrada = horariosEntrada[random.nextInt(horariosEntrada.length)];
-        LocalTime horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
+        LocalTime horarioSalida;
 
         do {
             horarioSalida = horariosSalida[random.nextInt(horariosSalida.length)];
@@ -185,11 +192,11 @@ public class UtilController {
         horario.setDiaSemana(dia);
         horario.setHoraEntrada(horarioEntrada);
         horario.setHoraSalida(horarioSalida);
+        horarioLista.add(horarioLaboralRepository.save(horario));
+
         horario2.setDiaSemana(dia2);
         horario2.setHoraEntrada(horarioEntrada);
         horario2.setHoraSalida(horarioSalida);
-
-        horarioLista.add(horarioLaboralRepository.save(horario));
         horarioLista.add(horarioLaboralRepository.save(horario2));
 
         return horarioLista;

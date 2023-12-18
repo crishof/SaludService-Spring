@@ -5,6 +5,8 @@ import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Pais;
 import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
+import com.crisdev.saludservice.model.HorarioLaboral;
+import com.crisdev.saludservice.model.Profesional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class UtilService {
             throw new MiException("El email no puede estar vacío");
         }
     }
+
     public void validarPassword(String password, String password2) throws MiException {
         if (password == null || password.length() < 6) {
             throw new MiException("La contraseña debe contener 6 dígitos");
@@ -39,7 +42,8 @@ public class UtilService {
             throw new MiException("Las contraseñas no coinciden");
         }
     }
-    public void validarProfesional (Especialidad especialidad, Long matricula) throws MiException {
+
+    public void validarProfesional(Especialidad especialidad, Long matricula) throws MiException {
 
         if (matricula == null) {
             throw new MiException("El número de matrícula no puede estar vacío");
@@ -48,6 +52,7 @@ public class UtilService {
             throw new MiException("Debe seleccionar su especialidad médica");
         }
     }
+
     public LocalDate formatearFecha(String fechaStr) throws MiException {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -61,6 +66,7 @@ public class UtilService {
 
         return fecha;
     }
+
     public LocalTime formatearHora(String hora) {
         // Crear un formateador para el formato de la cadena de tiempo
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -68,6 +74,7 @@ public class UtilService {
         return LocalTime.parse(hora, formatter);
 
     }
+
     public void validarUbicacion(Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) throws MiException {
 
         if (pais == null) {
@@ -86,12 +93,9 @@ public class UtilService {
             throw new MiException("El domicilio no puede estar vacío");
         }
     }
+
     public void validarHorario(DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
 
-        System.out.println("TEST VALIDAR");
-        System.out.println("dia = " + dia);
-        System.out.println("horaEntrada = " + horaEntrada);
-        System.out.println("horaSalida = " + horaSalida);
         if (dia == null) {
             throw new MiException("Debe seleccionar un día");
         }
@@ -102,6 +106,28 @@ public class UtilService {
             throw new MiException("Debe seleccionar la hora de salida");
         }
 
+    }
+
+    public void validarHorarioProfesional(Profesional profesional, DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
+
+        for (HorarioLaboral horarioLaboral : profesional.getHorarioLaboral()) {
+
+            if (horarioLaboral.getDiaSemana() == dia) {
+                // Si el día coincide, verifica si hay superposición de horarios
+                if (haySuperposicion(horarioLaboral.getHoraEntrada(), horarioLaboral.getHoraSalida(), horaEntrada, horaSalida)) {
+                    throw new MiException("Superposición de horarios para el día " + dia);
+                }
+            }
+        }
+    }
+
+    private boolean haySuperposicion(LocalTime horaEntradaExistente, LocalTime horaSalidaExistente, String horaEntrada, String horaSalida) {
+
+        LocalTime horaEntradaNueva = LocalTime.parse(horaEntrada);
+        LocalTime horaSalidaNueva = LocalTime.parse(horaSalida);
+        // Verifica si hay superposición
+        return (horaEntradaNueva.isBefore(horaSalidaExistente) && horaSalidaNueva.isAfter(horaEntradaExistente))
+                || (horaEntradaExistente.isBefore(horaSalidaNueva) && horaSalidaExistente.isAfter(horaEntradaNueva));
     }
 }
 

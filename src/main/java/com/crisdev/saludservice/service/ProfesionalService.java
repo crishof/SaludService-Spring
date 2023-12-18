@@ -8,7 +8,6 @@ import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,9 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -27,14 +24,14 @@ public class ProfesionalService {
     final UtilService utilService;
     final ProfesionalRepository profesionalRepository;
     final ImagenService imagenService;
-
-    @Autowired
+    final
     UbicacionService ubicacionService;
 
-    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService) {
+    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService, UbicacionService ubicacionService) {
         this.utilService = utilService;
         this.profesionalRepository = profesionalRepository;
         this.imagenService = imagenService;
+        this.ubicacionService = ubicacionService;
     }
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
@@ -86,37 +83,21 @@ public class ProfesionalService {
         return profesionalRepository.findByEspecialidadAndSort(especialidad, columna, sort);
     }
 
-    public void modificarProfesional(String id, String nombre, String apellido, String email) throws MiException {
-
-        Optional<Profesional> respuesta = profesionalRepository.findById(id);
-        if (respuesta.isPresent()) {
-            Profesional profesional = respuesta.get();
-            profesional.setNombre(nombre);
-            profesional.setApellido(apellido);
-            profesional.setEmail(email);
-            profesionalRepository.save(profesional);
-        } else {
-            throw new MiException("Profesional no encontrado");
-        }
-    }
-
     public void agregarHorario(Profesional profesional, HorarioLaboral horario) {
 
-        if (profesional.getHorarioLaboral() == null) {
+        List<HorarioLaboral> horarios = profesional.getHorarioLaboral();
+
+        if (horarios == null) {
             var horarioLaboral = new ArrayList<HorarioLaboral>();
             horarioLaboral.add(horario);
-            for (HorarioLaboral laboral : horarioLaboral) {
-                System.out.println("dia = " + laboral.getDiaSemana());
-                System.out.println("entrada = " + laboral.getHoraEntrada());
-                System.out.println("salida = " + laboral.getHoraSalida());
-            }
             profesional.setHorarioLaboral(horarioLaboral);
-            profesionalRepository.save(profesional);
         } else {
-            System.out.println("TEST AGREGAR HORARIO EN EL ELSE");
-            profesional.getHorarioLaboral().add(horario);
-            profesionalRepository.save(profesional);
+
+            horarios.add(horario);
+            profesional.setHorarioLaboral(horarios);
         }
+        profesionalRepository.save(profesional);
+
     }
 
     public Profesional buscarPorId(String id) {

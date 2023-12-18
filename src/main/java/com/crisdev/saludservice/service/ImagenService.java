@@ -3,7 +3,6 @@ package com.crisdev.saludservice.service;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.repository.ImagenRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,8 +12,12 @@ import java.util.Optional;
 @Service
 public class ImagenService {
 
-    @Autowired
+    final
     ImagenRepository imagenRepository;
+
+    public ImagenService(ImagenRepository imagenRepository) {
+        this.imagenRepository = imagenRepository;
+    }
 
     public Imagen guardar(MultipartFile archivo) {
 
