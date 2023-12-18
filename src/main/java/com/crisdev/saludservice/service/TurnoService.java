@@ -6,7 +6,6 @@ import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -22,12 +21,17 @@ import java.util.Optional;
 @Service
 public class TurnoService {
 
-    @Autowired
+    final
     TurnoRepository turnoRepository;
-    @Autowired
+    final
     HorarioLaboralRepository horarioLaboralRepository;
-    @Autowired
-    private ProfesionalRepository profesionalRepository;
+    private final ProfesionalRepository profesionalRepository;
+
+    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository) {
+        this.turnoRepository = turnoRepository;
+        this.horarioLaboralRepository = horarioLaboralRepository;
+        this.profesionalRepository = profesionalRepository;
+    }
 
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
 

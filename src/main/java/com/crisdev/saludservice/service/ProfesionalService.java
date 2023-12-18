@@ -1,6 +1,5 @@
 package com.crisdev.saludservice.service;
 
-import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
@@ -33,24 +32,6 @@ public class ProfesionalService {
         this.profesionalRepository = profesionalRepository;
         this.imagenService = imagenService;
         this.ubicacionService = ubicacionService;
-    }
-
-    public static List<HorarioLaboral> ordenarPorDiaSemana(List<HorarioLaboral> horarios) {
-        // Define un comparador personalizado basado en el orden de los días de la semana
-        Comparator<HorarioLaboral> comparador = Comparator.comparingInt(horario -> {
-            DiaSemana diaSemana = horario.getDiaSemana();
-            // Asigna un valor numérico a cada día de la semana para la comparación
-            return switch (diaSemana) {
-                case LUNES -> 1;
-                case MARTES -> 2;
-                case MIERCOLES -> 3;
-                case JUEVES -> 4;
-                case VIERNES -> 5;
-            };
-        });
-        // Ordena la lista usando el comparador
-        horarios.sort(comparador);
-        return horarios;
     }
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
@@ -111,22 +92,8 @@ public class ProfesionalService {
             horarioLaboral.add(horario);
             profesional.setHorarioLaboral(horarioLaboral);
         } else {
-            DiaSemana nuevoDia = horario.getDiaSemana();
-            int indiceExistente = -1;
 
-            for (int i = 0; i < horarios.size(); i++) {
-                DiaSemana diaExistente = horarios.get(i).getDiaSemana();
-                if (diaExistente.equals(nuevoDia)) {
-                    indiceExistente = i;
-                    break;
-                }
-            }
-
-            int indiceInsercion = 0;
-            while (indiceInsercion < horarios.size() && horarios.get(indiceInsercion).getDiaSemana().compareTo(nuevoDia) < 0) {
-                indiceInsercion++;
-            }
-            horarios.add(indiceInsercion, horario);
+            horarios.add(horario);
             profesional.setHorarioLaboral(horarios);
         }
         profesionalRepository.save(profesional);
@@ -141,20 +108,6 @@ public class ProfesionalService {
     public Profesional buscarPorEmail(String email) {
 
         return profesionalRepository.buscarPorEmail(email);
-    }
-
-    public void modificarProfesional(String id, String nombre, String apellido, String email) throws MiException {
-
-        Optional<Profesional> respuesta = profesionalRepository.findById(id);
-        if (respuesta.isPresent()) {
-            Profesional profesional = respuesta.get();
-            profesional.setNombre(nombre);
-            profesional.setApellido(apellido);
-            profesional.setEmail(email);
-            profesionalRepository.save(profesional);
-        } else {
-            throw new MiException("Profesional no encontrado");
-        }
     }
 }
 

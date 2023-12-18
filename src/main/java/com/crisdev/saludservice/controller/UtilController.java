@@ -43,6 +43,9 @@ public class UtilController {
     ImagenService imagenService;
     @Autowired
     HorarioLaboralRepository horarioLaboralRepository;
+
+    @Autowired
+    TurnoService turnoService;
     Random random = new Random();
 
     @GetMapping("/profesionalRandom")
@@ -72,7 +75,11 @@ public class UtilController {
 
         profesional.setHorarioLaboral(crearHorario());
 
-        profesionalRepository.save(profesional);
+
+        Profesional profe = profesionalRepository.save(profesional);
+
+        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(1));
+        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(0));
 
         return "redirect:/profesional/listarProfesionales";
     }
@@ -180,12 +187,17 @@ public class UtilController {
         } while (horarioSalida.getHour() <= horarioEntrada.getHour());
 
         HorarioLaboral horario = new HorarioLaboral();
+        HorarioLaboral horario2 = new HorarioLaboral();
 
         horario.setDiaSemana(dia);
         horario.setHoraEntrada(horarioEntrada);
         horario.setHoraSalida(horarioSalida);
-
         horarioLista.add(horarioLaboralRepository.save(horario));
+
+        horario2.setDiaSemana(dia2);
+        horario2.setHoraEntrada(horarioEntrada);
+        horario2.setHoraSalida(horarioSalida);
+        horarioLista.add(horarioLaboralRepository.save(horario2));
 
         return horarioLista;
 

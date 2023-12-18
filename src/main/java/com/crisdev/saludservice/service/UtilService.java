@@ -96,10 +96,6 @@ public class UtilService {
 
     public void validarHorario(DiaSemana dia, String horaEntrada, String horaSalida) throws MiException {
 
-        System.out.println("TEST VALIDAR");
-        System.out.println("dia = " + dia);
-        System.out.println("horaEntrada = " + horaEntrada);
-        System.out.println("horaSalida = " + horaSalida);
         if (dia == null) {
             throw new MiException("Debe seleccionar un día");
         }
