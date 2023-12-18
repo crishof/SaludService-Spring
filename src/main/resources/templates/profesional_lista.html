@@ -45,7 +45,9 @@
                 <td th:text="${profesional.horarioLaboral}"></td>
                 <td th:text="${profesional.ubicacion.provincia}"></td>
                 <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
-                <td>Acciones</td>
+                <td>
+                    <a th:href="@{/turno/verTurnos}" class="btn btn-primary">Ver turnos</a>
+                </td>
             </tr>
             </tbody>
         </table>
