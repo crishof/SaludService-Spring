@@ -109,6 +109,21 @@ public class ProfesionalService {
 
         return profesionalRepository.buscarPorEmail(email);
     }
+
+    public void actualizarPrecioConsulta(String id, double precio) throws MiException {
+
+        Optional<Profesional> respuesta = profesionalRepository.findById(id);
+
+        try{
+        if (respuesta.isPresent()) {
+            Profesional profesional = respuesta.get();
+            profesional.setPrecioConsulta(precio);
+            profesionalRepository.save(profesional);
+        }
+        }catch (Exception e){
+            throw new MiException(e.getMessage());
+        }
+    }
 }
 
 

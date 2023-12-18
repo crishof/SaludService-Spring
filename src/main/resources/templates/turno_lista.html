@@ -17,6 +17,7 @@
         <table class="table table-hover">
             <thead>
             <tr>
+                <th scope="col">Día</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Hora</th>
                 <th scope="col">Profesional</th>
@@ -26,6 +27,7 @@
             </thead>
             <tbody th:each="turno : ${turnos}">
             <tr>
+                <td th:text="${turno.getFecha().getDayOfWeek()}"></td>
                 <td th:text="${turno.fecha}"></td>
                 <td th:text="${turno.hora}"></td>
                 <td th:text="${turno.profesional.apellido + ' ' + turno.profesional.nombre}"></td>
