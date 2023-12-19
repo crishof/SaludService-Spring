@@ -22,16 +22,20 @@
                 <th scope="col">Hora</th>
                 <th scope="col">Profesional</th>
                 <th scope="col">Especialidad</th>
+                <th scope="col">Acciones</th>
 
             </tr>
             </thead>
             <tbody th:each="turno : ${turnos}">
             <tr>
-                <td th:text="${turno.getFecha().getDayOfWeek()}"></td>
+                <td th:text="${@dateUtils.obtenerNombreDiaSemanaSPA(turno.fecha.getDayOfWeek())}"></td>
                 <td th:text="${turno.fecha}"></td>
                 <td th:text="${turno.hora}"></td>
                 <td th:text="${turno.profesional.apellido + ' ' + turno.profesional.nombre}"></td>
                 <td th:text="${turno.profesional.especialidad}"></td>
+                <td>
+                    <a th:href="@{/turno/solicitar/__${turno.id}__}" class="btn btn-primary">Solicitar cita</a>
+                </td>
             </tr>
             </tbody>
         </table>

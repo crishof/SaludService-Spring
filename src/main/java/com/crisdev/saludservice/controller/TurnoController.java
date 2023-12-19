@@ -44,4 +44,21 @@ public class TurnoController {
 
     }
 
+    @GetMapping("/solicitar/{id}")
+    public String solicitarTurno(@PathVariable String id,ModelMap modelMap){
+
+            Turno turno = turnoService.buscarPorId(id);
+
+            System.out.println(turno.getFecha() + " " + turno.getProfesional());
+        modelMap.addAttribute("turno",turno);
+        return "turno_solicitud";
+
+    }
+
+    @PostMapping("/confirmarTurno/{id}")
+    public String confirmarTurno(@PathVariable String id, ModelMap modelMap){
+
+        return "redirect:/paciente/listarCitas";
+    }
+
 }

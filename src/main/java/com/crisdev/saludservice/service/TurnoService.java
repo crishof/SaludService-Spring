@@ -106,4 +106,11 @@ public class TurnoService {
         return turnoRepository.findAll(pageable);
 
     }
+
+    public Turno buscarPorId(String id) {
+
+        Optional<Turno> respuesta = turnoRepository.findById(id);
+
+        return respuesta.orElse(null);
+    }
 }
