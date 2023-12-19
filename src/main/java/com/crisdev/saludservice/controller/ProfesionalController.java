@@ -119,4 +119,20 @@ public class ProfesionalController {
         }
         return "redirect:/profesional/horario";
     }
+
+    @PostMapping("/precioConsulta/{id}")
+    public String modificarPrecioConsulta(@PathVariable String id, double precio, RedirectAttributes redirectAttributes) {
+
+        try {
+            utilService.validarPrecio(precio);
+            profesionalService.actualizarPrecioConsulta(id, precio);
+            redirectAttributes.addAttribute("exito", "Precio actualizado con éxito");
+
+        } catch (MiException e) {
+            redirectAttributes.addAttribute("error", e.getMessage());
+
+            return "redirect:/profesional/horario";
+        }
+        return "redirect:/profesional/horario";
+    }
 }

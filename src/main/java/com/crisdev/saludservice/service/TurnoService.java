@@ -6,6 +6,8 @@ import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -99,5 +101,16 @@ public class TurnoService {
         return turnosDia;
     }
 
+    public Page<Turno> listarTurnos(PageRequest pageable) {
 
+        return turnoRepository.findAll(pageable);
+
+    }
+
+    public Turno buscarPorId(String id) {
+
+        Optional<Turno> respuesta = turnoRepository.findById(id);
+
+        return respuesta.orElse(null);
+    }
 }

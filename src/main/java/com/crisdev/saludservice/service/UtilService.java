@@ -9,6 +9,7 @@ import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Profesional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -128,6 +129,18 @@ public class UtilService {
         // Verifica si hay superposición
         return (horaEntradaNueva.isBefore(horaSalidaExistente) && horaSalidaNueva.isAfter(horaEntradaExistente))
                 || (horaEntradaExistente.isBefore(horaSalidaNueva) && horaSalidaExistente.isAfter(horaEntradaNueva));
+    }
+
+    public void validarPrecio(double precio) throws MiException {
+
+        if( precio <= 0){
+        // Convertir el valor double a BigDecimal
+//        BigDecimal precioDecimal = BigDecimal.valueOf(precio);
+
+        // Validar precio
+//        if (precioDecimal == null || precioDecimal.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new MiException("El precio debe ser mayor que 0");
+        }
     }
 }
 
