@@ -1,11 +1,16 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.HorarioLaboral;
+import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.HorarioLaboralRepository;
+import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -21,16 +26,21 @@ import java.util.Optional;
 @Service
 public class TurnoService {
 
-    final
-    TurnoRepository turnoRepository;
-    final
-    HorarioLaboralRepository horarioLaboralRepository;
-    private final ProfesionalRepository profesionalRepository;
+    final PacienteRepository pacienteRepository;
+    final TurnoRepository turnoRepository;
+    final HorarioLaboralRepository horarioLaboralRepository;
+    final ProfesionalRepository profesionalRepository;
+    final PacienteService pacienteService;
 
-    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository) {
+    final ProfesionalService profesionalService;
+
+    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository, PacienteService pacienteService, ProfesionalService profesionalService) {
         this.turnoRepository = turnoRepository;
         this.horarioLaboralRepository = horarioLaboralRepository;
         this.profesionalRepository = profesionalRepository;
+        this.pacienteRepository = pacienteRepository;
+        this.pacienteService = pacienteService;
+        this.profesionalService = profesionalService;
     }
 
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
@@ -90,8 +100,7 @@ public class TurnoService {
         List<LocalDateTime> turnosDia = new ArrayList<>();
         LocalDateTime dateTimeEntrada = LocalDateTime.of(fecha, horaEntrada);
 
-        while (dateTimeEntrada.plusMinutes(30).isBefore(LocalDateTime.of(fecha, horaSalida)) ||
-                dateTimeEntrada.plusMinutes(30).equals(LocalDateTime.of(fecha, horaSalida))) {
+        while (dateTimeEntrada.plusMinutes(30).isBefore(LocalDateTime.of(fecha, horaSalida)) || dateTimeEntrada.plusMinutes(30).equals(LocalDateTime.of(fecha, horaSalida))) {
             turnosDia.add(dateTimeEntrada);
             dateTimeEntrada = dateTimeEntrada.plusMinutes(30);
         }
@@ -99,5 +108,69 @@ public class TurnoService {
         return turnosDia;
     }
 
+    public Page<Turno> listarTurnos(PageRequest pageable) {
 
+        return turnoRepository.findAll(pageable);
+
+    }
+
+    public Turno buscarPorId(String id) {
+
+        Optional<Turno> respuesta = turnoRepository.findById(id);
+
+        return respuesta.orElse(null);
+    }
+
+    public void confirmarTurno(String idTurno, Paciente paciente) throws MiException {
+        Turno turno = buscarPorId(idTurno);
+
+        // Verificar si el turno existe
+        if (turno == null) {
+            throw new MiException("El turno con ID " + idTurno + " no existe");
+        }
+
+        // Verificar si el paciente existe
+        if (paciente == null) {
+            throw new MiException("El paciente no existe");
+        }
+
+        // Asignar el paciente al turno y marcar el turno como no disponible
+        turno.setPaciente(paciente);
+        turno.setDisponible(false);
+
+        // Guardar el turno actualizado
+        turnoRepository.save(turno);
+    }
+
+    public List<Turno> listarTurnosPaciente(String id) {
+        try {
+            // Buscar al paciente por su ID
+            Paciente paciente = pacienteService.buscarPacientePorId(id);
+
+            // Verificar si el paciente existe
+            if (paciente == null) {
+                throw new MiException("El paciente con ID " + id + " no existe");
+            }
+            // Retornar la lista de turnos del paciente
+            return turnoRepository.findByPacienteId(paciente.getId());
+        } catch (MiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Object listarTurnosReservados(String id) {
+        try {
+            // Buscar al profesional por su ID
+            Profesional profesional = profesionalService.buscarPorId(id);
+
+            // Verificar si el profesional existe
+            if (profesional == null) {
+                throw new MiException("El profesional con ID " + id + " no existe");
+            }
+
+            return turnoRepository.findTurnosReservadosProfesional(profesional.getId());
+        } catch (MiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
