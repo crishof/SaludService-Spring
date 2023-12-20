@@ -12,4 +12,7 @@ import java.util.List;
 public interface TurnoRepository extends JpaRepository<Turno, String> {
     @Query("SELECT t FROM Turno t WHERE t.paciente.id = :pacienteId")
     List<Turno> findByPacienteId(@Param("pacienteId") String pacienteId);
+
+    @Query("SELECT t FROM Turno t WHERE t.profesional.id = :profesionalId AND t.disponible = false")
+    List<Turno> findTurnosReservadosProfesional(String profesionalId);
 }

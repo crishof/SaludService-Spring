@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class PacienteService {

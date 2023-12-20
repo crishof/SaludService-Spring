@@ -9,7 +9,6 @@ import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -31,14 +30,17 @@ public class TurnoService {
     final TurnoRepository turnoRepository;
     final HorarioLaboralRepository horarioLaboralRepository;
     final ProfesionalRepository profesionalRepository;
-    @Autowired
-    PacienteService pacienteService;
+    final PacienteService pacienteService;
 
-    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository) {
+    final ProfesionalService profesionalService;
+
+    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository, PacienteService pacienteService, ProfesionalService profesionalService) {
         this.turnoRepository = turnoRepository;
         this.horarioLaboralRepository = horarioLaboralRepository;
         this.profesionalRepository = profesionalRepository;
         this.pacienteRepository = pacienteRepository;
+        this.pacienteService = pacienteService;
+        this.profesionalService = profesionalService;
     }
 
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
@@ -98,8 +100,7 @@ public class TurnoService {
         List<LocalDateTime> turnosDia = new ArrayList<>();
         LocalDateTime dateTimeEntrada = LocalDateTime.of(fecha, horaEntrada);
 
-        while (dateTimeEntrada.plusMinutes(30).isBefore(LocalDateTime.of(fecha, horaSalida)) ||
-                dateTimeEntrada.plusMinutes(30).equals(LocalDateTime.of(fecha, horaSalida))) {
+        while (dateTimeEntrada.plusMinutes(30).isBefore(LocalDateTime.of(fecha, horaSalida)) || dateTimeEntrada.plusMinutes(30).equals(LocalDateTime.of(fecha, horaSalida))) {
             turnosDia.add(dateTimeEntrada);
             dateTimeEntrada = dateTimeEntrada.plusMinutes(30);
         }
@@ -130,7 +131,7 @@ public class TurnoService {
 
         // Verificar si el paciente existe
         if (paciente == null) {
-            throw new MiException("El paciente con ID " + paciente + " no existe");
+            throw new MiException("El paciente no existe");
         }
 
         // Asignar el paciente al turno y marcar el turno como no disponible
@@ -150,11 +151,24 @@ public class TurnoService {
             if (paciente == null) {
                 throw new MiException("El paciente con ID " + id + " no existe");
             }
+            // Retornar la lista de turnos del paciente
+            return turnoRepository.findByPacienteId(paciente.getId());
+        } catch (MiException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-            // Obtener la lista de turnos del paciente
-            List<Turno> turnos = turnoRepository.findByPacienteId(paciente.getId());
+    public Object listarTurnosReservados(String id) {
+        try {
+            // Buscar al profesional por su ID
+            Profesional profesional = profesionalService.buscarPorId(id);
 
-            return turnos;
+            // Verificar si el profesional existe
+            if (profesional == null) {
+                throw new MiException("El profesional con ID " + id + " no existe");
+            }
+
+            return turnoRepository.findTurnosReservadosProfesional(profesional.getId());
         } catch (MiException e) {
             throw new RuntimeException(e);
         }
