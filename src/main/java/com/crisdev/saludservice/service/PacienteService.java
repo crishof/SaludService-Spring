@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class PacienteService {
@@ -58,5 +59,10 @@ public class PacienteService {
         paciente.setUbicacion(ubicacion);
 
         pacienteRepository.save(paciente);
+    }
+
+    public Paciente buscarPacientePorId(String idPaciente) throws MiException {
+        return pacienteRepository.findById(idPaciente)
+                .orElseThrow(() -> new MiException("Paciente no encontrado con ID: " + idPaciente));
     }
 }

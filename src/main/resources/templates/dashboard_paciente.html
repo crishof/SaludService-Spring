@@ -14,6 +14,23 @@
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
     <h1>Dashboard Paciente</h1>
+
+    <div class="container m-2">
+        <h3>Listas de usuarios</h3>
+        <a class="btn btn-primary" th:href="@{/profesional/listarProfesionales}">Lista profesionales</a>
+    </div>
+
+    <div class="container m-2">
+        <h3>Citas</h3>
+        <a class="btn btn-primary" th:href="@{/paciente/listarCitas}">Mis citas</a>
+    </div>
+
+
+    <div th:if="${session.usuariosession != null}">
+        <h2>FOTO DE PERFIL</h2>
+        <img class="logo" th:src="@{/imagen/perfil/__${session.usuariosession.id}__}" alt=""
+             style="width: 100px; border-radius:50px">
+    </div>
 </div>
 <footer th:replace="../layout/footer :: footer"></footer>
 <script
