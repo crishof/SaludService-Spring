@@ -8,10 +8,7 @@ import com.crisdev.saludservice.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -39,5 +36,13 @@ public class Consulta {
         }
 
         return "consulta_form";
+    }
+
+    @PostMapping("/crearConsulta")
+    public String crearConsulta(@RequestParam String motivo, @RequestParam double peso, @RequestParam double altura,
+                                @RequestParam String alergias, @RequestParam String diagnostico, @RequestParam String indicaciones,
+                                String observaciones) {
+
+        return "redirect:/profesional/listarCitas";
     }
 }
