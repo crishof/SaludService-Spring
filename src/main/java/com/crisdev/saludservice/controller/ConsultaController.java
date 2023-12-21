@@ -49,15 +49,26 @@ ConsultaService consultaService;
         try {
             Profesional profesional = (Profesional) session.getAttribute("usuariosession");
             consultaService.crearConsulta(idTurno, motivo, antecedentes, diagnostico, indicaciones, observaciones, profesional);
+            turnoService.atenderTurno(idTurno);
             modelMap.addAttribute("exito", "Consulta registrada con éxito");
         } catch (MiException e) {
             modelMap.addAttribute("error", e.getMessage());
             return "redirect:/profesional/listarCitas";
 
         }
-
-
         return "redirect:/profesional/listarCitas";
+    }
+
+    @PostMapping("/valorar")
+    public String valorarConsulta(@RequestParam String idConsulta, @RequestParam int estrellas){
+
+
+        System.out.println("idConsulta = " + idConsulta);
+        System.out.println("estrellas = " + estrellas);
+
+        consultaService.valorarConsulta(idConsulta,estrellas);
+
+        return "redirect:/paciente/listarConsultas";
     }
 
 }

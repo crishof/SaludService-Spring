@@ -26,4 +26,5 @@ public class Turno {
     @OneToOne
     private Paciente paciente;
     private boolean disponible;
+    private boolean atendido;
 }

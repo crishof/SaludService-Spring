@@ -4,12 +4,15 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Consulta;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
+import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.ConsultaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ConsultaService {
@@ -43,5 +46,20 @@ public class ConsultaService {
 
         consultaRepository.save(consulta);
 
+    }
+
+    public List<Consulta> listarConsultasPaciente(Paciente paciente) {
+        return consultaRepository.findAllByPacienteId(paciente.getId());
+    }
+
+    public void valorarConsulta(String idConsulta, int estrellas) {
+
+        Optional<Consulta> respuesta = consultaRepository.findById(idConsulta);
+
+        if(respuesta.isPresent()){
+            Consulta consulta = respuesta.get();
+            consulta.setValoracion(estrellas);
+            consultaRepository.save(consulta);
+        }
     }
 }
