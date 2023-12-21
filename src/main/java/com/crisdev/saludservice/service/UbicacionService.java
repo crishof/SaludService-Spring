@@ -12,8 +12,7 @@ import java.util.Optional;
 @Service
 public class UbicacionService {
 
-    final
-    UbicacionRepository ubicacionRepository;
+    final UbicacionRepository ubicacionRepository;
 
     public UbicacionService(UbicacionRepository ubicacionRepository) {
         this.ubicacionRepository = ubicacionRepository;

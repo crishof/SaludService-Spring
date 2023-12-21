@@ -9,6 +9,7 @@ import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -26,23 +27,27 @@ import java.util.Optional;
 @Service
 public class TurnoService {
 
-    final PacienteRepository pacienteRepository;
-    final TurnoRepository turnoRepository;
-    final HorarioLaboralRepository horarioLaboralRepository;
-    final ProfesionalRepository profesionalRepository;
-    final PacienteService pacienteService;
+    @Autowired
+    TurnoRepository turnoRepository;
+//    @Autowired
+//    PacienteRepository pacienteRepository;
+//    @Autowired
+//    HorarioLaboralRepository horarioLaboralRepository;
+    @Autowired
+    ProfesionalRepository profesionalRepository;
 
-    final ProfesionalService profesionalService;
+    @Autowired
+    ProfesionalService profesionalService;
 
-    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository, PacienteService pacienteService, ProfesionalService profesionalService) {
-        this.turnoRepository = turnoRepository;
-        this.horarioLaboralRepository = horarioLaboralRepository;
-        this.profesionalRepository = profesionalRepository;
-        this.pacienteRepository = pacienteRepository;
-        this.pacienteService = pacienteService;
-        this.profesionalService = profesionalService;
-    }
-
+//    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository, PacienteService pacienteService, ProfesionalService profesionalService) {
+//        this.turnoRepository = turnoRepository;
+//        this.horarioLaboralRepository = horarioLaboralRepository;
+//        this.profesionalRepository = profesionalRepository;
+//        this.pacienteRepository = pacienteRepository;
+//        this.pacienteService = pacienteService;
+//        this.profesionalService = profesionalService;
+//    }
+//
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
 
 
@@ -143,19 +148,20 @@ public class TurnoService {
     }
 
     public List<Turno> listarTurnosPaciente(String id) {
-        try {
-            // Buscar al paciente por su ID
-            Paciente paciente = pacienteService.buscarPacientePorId(id);
-
-            // Verificar si el paciente existe
-            if (paciente == null) {
-                throw new MiException("El paciente con ID " + id + " no existe");
-            }
+//        try {
+//            // Buscar al paciente por su ID
+//            Paciente paciente = pacienteService.buscarPacientePorId(id);
+//
+//            // Verificar si el paciente existe
+//            if (paciente == null) {
+//                throw new MiException("El paciente con ID " + id + " no existe");
+//            }
             // Retornar la lista de turnos del paciente
-            return turnoRepository.findByPacienteId(paciente.getId());
-        } catch (MiException e) {
-            throw new RuntimeException(e);
-        }
+//            return turnoRepository.findByPacienteId(paciente.getId());
+//        } catch (MiException e) {
+//            throw new RuntimeException(e);
+//        }
+            return null;
     }
 
     public Object listarTurnosReservados(String id) {

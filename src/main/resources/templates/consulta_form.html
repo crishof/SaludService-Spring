@@ -2,7 +2,6 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
         lang="en"
 >
 
@@ -29,7 +28,9 @@
                 </div>
             </div>
             <div class="card-body">
-                <form th:action="@{/registrarPaciente}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/registrarPaciente}" method="post">
+
+                    <input hidden th:value="${turno.id}" name="idTurno">
                     <div class="form-group">
 
                         <div class="form-floating mb-3">
@@ -38,42 +39,29 @@
                             <label for="motivo">Motivo de consulta</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="peso" name="peso" placeholder="peso"
-                                   th:value="${peso}">
-                            <label for="peso">Peso</label>
+                            <input type="text" class="form-control" id="antecedentes" name="antecedentes"
+                                   placeholder="antecedentes"
+                                   th:value="${antecedentes}">
+                            <label for="antecedentes">Antecedentes</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="altura" name="altura" placeholder="altura"
-                                   th:value="${altura}">
-                            <label for="altura">Altura</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="alergias" name="alergias"
-                                   placeholder="alergias"
-                                   th:value="${alergias}">
-                            <label for="alergias">Alergias</label>
-                        </div>
-
-                    </div>
-                    <div class="form-group">
-
-                        <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="diagnostico" name="diagnostico"
+                            <input type="text" class="form-control" id="diagnostico" name="diagnostico"
                                    placeholder="diagnostico" th:value="${diagnostico}">
                             <label for="diagnostico">Diagnostico</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="date" class="form-control" id="indicaciones" name="indicaciones"
-                                   placeholder="indicaciones" th:value="${indicaciones}">
+                            <textarea class="form-control" id="indicaciones" name="indicaciones"
+                                      placeholder="indicaciones" th:value="${indicaciones}"></textarea>
                             <label for="indicaciones">Indicaciones</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="observaciones" name="observaciones"
-                                   placeholder="observaciones" th:value="${observaciones}">
+                            <textarea class="form-control" id="observaciones" name="observaciones"
+                                      placeholder="observaciones" th:value="${observaciones}"></textarea>
                             <label for="observaciones">Observaciones</label>
                         </div>
 
                     </div>
+
                     <button class="btn btn-primary" type="submit">Guardar</button>
                     <a class="btn btn-secondary" th:href="@{/profesional/listarCitas}">Volver</a>
                 </form>

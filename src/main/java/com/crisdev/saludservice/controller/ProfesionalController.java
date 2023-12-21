@@ -4,11 +4,10 @@ import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.HorarioLaboral;
+import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
-import com.crisdev.saludservice.service.HorarioLaboralService;
-import com.crisdev.saludservice.service.ProfesionalService;
-import com.crisdev.saludservice.service.TurnoService;
-import com.crisdev.saludservice.service.UtilService;
+import com.crisdev.saludservice.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -25,17 +24,14 @@ import java.util.List;
 @RequestMapping("/profesional")
 public class ProfesionalController {
 
-    final ProfesionalService profesionalService;
-    final HorarioLaboralService horarioLaboralService;
-    final UtilService utilService;
-    final TurnoService turnoService;
-
-    public ProfesionalController(ProfesionalService profesionalService, HorarioLaboralService horarioLaboralService, UtilService utilService, TurnoService turnoService) {
-        this.profesionalService = profesionalService;
-        this.horarioLaboralService = horarioLaboralService;
-        this.utilService = utilService;
-        this.turnoService = turnoService;
-    }
+    @Autowired
+    ProfesionalService profesionalService;
+    @Autowired
+    HorarioLaboralService horarioLaboralService;
+    @Autowired
+    UtilService utilService;
+    @Autowired
+    TurnoService turnoService;
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {
@@ -56,9 +52,8 @@ public class ProfesionalController {
         return "dashboard_profesional";
     }
 
-
     @GetMapping("/horario")
-    public String crearHorario(ModelMap model, @RequestParam(required = false) String error, @RequestParam(required = false) String exito, HttpSession session) {
+    public String crearHorario(ModelMap model, @RequestParam(required = false) String error, @RequestParam(required = false) String exito) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -88,7 +83,7 @@ public class ProfesionalController {
     }
 
     @PostMapping("/horario/{id}")
-    public String crearHorario(@PathVariable String id, DiaSemana dia, String horaEntrada, String horaSalida, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String crearHorario(@PathVariable String id, DiaSemana dia, String horaEntrada, String horaSalida, RedirectAttributes redirectAttributes) {
 
         try {
             utilService.validarHorario(dia, horaEntrada, horaSalida);
@@ -131,12 +126,23 @@ public class ProfesionalController {
     }
 
     @GetMapping("/listarCitas")
-    public String listarCitas(HttpSession session, ModelMap modelMap) throws MiException {
+    public String listarCitas(HttpSession session, ModelMap modelMap) {
 
         Profesional profesional = (Profesional) session.getAttribute("usuariosession");
 
         var turnos = turnoService.listarTurnosReservados(profesional.getId());
         modelMap.addAttribute("turnos", turnos);
+
+        return "profesional_citas";
+    }
+
+    @GetMapping("/listarPacientes")
+    public String listarPacientes(HttpSession session, ModelMap modelMap) {
+
+        Profesional profesional = (Profesional) session.getAttribute("usuariosession");
+
+        List<Paciente> pacientes = profesionalService.listarPacientesDelProfesional(profesional.getId());
+        modelMap.addAttribute("pacientes", pacientes);
 
         return "profesional_citas";
     }

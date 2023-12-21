@@ -3,11 +3,9 @@ package com.crisdev.saludservice.service;
 import com.crisdev.saludservice.enums.Especialidad;
 import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
-import com.crisdev.saludservice.model.HorarioLaboral;
-import com.crisdev.saludservice.model.Imagen;
-import com.crisdev.saludservice.model.Profesional;
-import com.crisdev.saludservice.model.Ubicacion;
+import com.crisdev.saludservice.model.*;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,17 +13,23 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class ProfesionalService {
 
-    final UtilService utilService;
-    final ProfesionalRepository profesionalRepository;
-    final ImagenService imagenService;
-    final
+    @Autowired
+    UtilService utilService;
+    @Autowired
+    ProfesionalRepository profesionalRepository;
+    @Autowired
+    ImagenService imagenService;
+    @Autowired
     UbicacionService ubicacionService;
+
 
     public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService, UbicacionService ubicacionService) {
         this.utilService = utilService;
@@ -114,15 +118,20 @@ public class ProfesionalService {
 
         Optional<Profesional> respuesta = profesionalRepository.findById(id);
 
-        try{
-        if (respuesta.isPresent()) {
-            Profesional profesional = respuesta.get();
-            profesional.setPrecioConsulta(precio);
-            profesionalRepository.save(profesional);
-        }
-        }catch (Exception e){
+        try {
+            if (respuesta.isPresent()) {
+                Profesional profesional = respuesta.get();
+                profesional.setPrecioConsulta(precio);
+                profesionalRepository.save(profesional);
+            }
+        } catch (Exception e) {
             throw new MiException(e.getMessage());
         }
+    }
+
+    public List<Paciente> listarPacientesDelProfesional(String id) {
+
+        return profesionalRepository.listarPacientesDelProfesional(id);
     }
 }
 

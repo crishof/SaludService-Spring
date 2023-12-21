@@ -2,7 +2,9 @@ package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Paciente;
+import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
+import com.crisdev.saludservice.service.ConsultaService;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,16 +16,18 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/consulta")
-public class Consulta {
+public class ConsultaController {
 
-    @Autowired
-    TurnoService turnoService;
-    @Autowired
-    PacienteService pacienteService;
+@Autowired
+TurnoService turnoService;
+@Autowired
+PacienteService pacienteService;
+@Autowired
+ConsultaService consultaService;
 
 
     @GetMapping("/atenderConsulta/{id}")
-    public String atenderConsulta(@PathVariable String id, HttpSession session, ModelMap modelMap) {
+    public String atenderConsulta(@PathVariable String id, ModelMap modelMap) {
 
         Turno turno = turnoService.buscarPorId(id);
 
@@ -39,10 +43,22 @@ public class Consulta {
     }
 
     @PostMapping("/crearConsulta")
-    public String crearConsulta(@RequestParam String motivo, @RequestParam double peso, @RequestParam double altura,
-                                @RequestParam String alergias, @RequestParam String diagnostico, @RequestParam String indicaciones,
-                                String observaciones) {
+    public String crearConsulta(@RequestParam String idTurno, @RequestParam String motivo, String antecedentes, @RequestParam String diagnostico, @RequestParam String indicaciones, String observaciones, HttpSession session, ModelMap modelMap) {
+
+
+        try {
+            Profesional profesional = (Profesional) session.getAttribute("usuariosession");
+            consultaService.crearConsulta(idTurno, motivo, antecedentes, diagnostico, indicaciones, observaciones, profesional);
+            modelMap.addAttribute("exito", "Consulta registrada con éxito");
+        } catch (MiException e) {
+            modelMap.addAttribute("error", e.getMessage());
+            return "redirect:/profesional/listarCitas";
+
+        }
+
 
         return "redirect:/profesional/listarCitas";
     }
+
 }
+

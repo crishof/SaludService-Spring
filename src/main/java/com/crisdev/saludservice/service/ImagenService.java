@@ -12,8 +12,7 @@ import java.util.Optional;
 @Service
 public class ImagenService {
 
-    final
-    ImagenRepository imagenRepository;
+    final ImagenRepository imagenRepository;
 
     public ImagenService(ImagenRepository imagenRepository) {
         this.imagenRepository = imagenRepository;
