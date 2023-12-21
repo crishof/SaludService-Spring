@@ -4,8 +4,10 @@ import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Paciente;
+import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.PacienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,19 +18,17 @@ import java.time.LocalDate;
 @Service
 public class PacienteService {
 
-    final UtilService utilService;
-    final ImagenService imagenService;
-    final PacienteRepository pacienteRepository;
+    @Autowired
+    TurnoService turnoService;
 
-    final
+    @Autowired
+    PacienteRepository pacienteRepository;
+    @Autowired
+    UtilService utilService;
+    @Autowired
+    ImagenService imagenService;
+    @Autowired
     UbicacionService ubicacionService;
-
-    public PacienteService(UtilService utilService, ImagenService imagenService, PacienteRepository pacienteRepository, UbicacionService ubicacionService) {
-        this.utilService = utilService;
-        this.imagenService = imagenService;
-        this.pacienteRepository = pacienteRepository;
-        this.ubicacionService = ubicacionService;
-    }
 
     public void crearPaciente(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, String email, String password, String password2) throws ParseException, MiException {
 
@@ -61,7 +61,13 @@ public class PacienteService {
     }
 
     public Paciente buscarPacientePorId(String idPaciente) throws MiException {
-        return pacienteRepository.findById(idPaciente)
-                .orElseThrow(() -> new MiException("Paciente no encontrado con ID: " + idPaciente));
+        return pacienteRepository.findById(idPaciente).orElseThrow(() -> new MiException("Paciente no encontrado con ID: " + idPaciente));
+    }
+
+    public Paciente buscarPacientePorIdTurno(String idTurno) throws MiException {
+
+        Turno turno = turnoService.buscarPorId(idTurno);
+
+        return buscarPacientePorId(turno.getPaciente().getId());
     }
 }

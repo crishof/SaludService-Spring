@@ -5,7 +5,7 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,14 +21,10 @@ import java.text.ParseException;
 @RequestMapping("/")
 public class inicioController {
 
-    final ProfesionalService profesionalService;
-
-    final PacienteService pacienteService;
-
-    public inicioController(ProfesionalService profesionalService, PacienteService pacienteService) {
-        this.profesionalService = profesionalService;
-        this.pacienteService = pacienteService;
-    }
+    @Autowired
+    ProfesionalService profesionalService;
+    @Autowired
+    PacienteService pacienteService;
 
     @GetMapping("/")
     public String index() {
@@ -53,7 +49,7 @@ public class inicioController {
             return "index";
         }
         if (logueado.getRol().toString().equals("PACIENTE")) {
-            return "dashboard_paciente";
+            return "redirect:/paciente/dashboard";
         }
         if (logueado.getRol().toString().equals("ADMIN")) {
             return "redirect:/admin/dashboard";

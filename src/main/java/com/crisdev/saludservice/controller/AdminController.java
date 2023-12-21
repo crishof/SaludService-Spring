@@ -14,5 +14,5 @@ public class AdminController {
         return "dashboard_admin";
     }
 
-//    /usuarios para ver la lista de users
+
 }

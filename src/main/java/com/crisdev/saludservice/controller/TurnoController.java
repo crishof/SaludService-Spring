@@ -1,10 +1,7 @@
 package com.crisdev.saludservice.controller;
 
-import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.exception.MiException;
-import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Paciente;
-import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.service.PacienteService;
@@ -19,35 +16,23 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/turno")
 public class TurnoController {
 
-    final
+    @Autowired
     TurnoService turnoService;
-
-    final
+    @Autowired
     ProfesionalService profesionalService;
-
-    final
+    @Autowired
     ProfesionalRepository profesionalRepository;
-
-    final
+    @Autowired
     PacienteService pacienteService;
 
-    public TurnoController(TurnoService turnoService, ProfesionalService profesionalService, ProfesionalRepository profesionalRepository, PacienteService pacienteService) {
-        this.turnoService = turnoService;
-        this.profesionalService = profesionalService;
-        this.profesionalRepository = profesionalRepository;
-        this.pacienteService = pacienteService;
-    }
 
     @GetMapping("/verTurnos")
-    public String verTurnos(ModelMap modelMap,
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "15") int size) {
+    public String verTurnos(ModelMap modelMap, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "15") int size) {
 
         PageRequest pageable = PageRequest.of(page, size);
         Page<Turno> turnos = turnoService.listarTurnos(pageable);

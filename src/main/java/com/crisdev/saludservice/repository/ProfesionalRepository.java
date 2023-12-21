@@ -1,5 +1,6 @@
 package com.crisdev.saludservice.repository;
 
+import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,5 +24,7 @@ public interface ProfesionalRepository extends JpaRepository<Profesional, String
     @Query("SELECT p FROM Profesional p WHERE p.email = :email")
     Profesional buscarPorEmail(@Param("email") String email);
 
+    @Query("SELECT DISTINCT c.paciente FROM Consulta c WHERE c.profesional.id = :profesionalId AND c.atendido = true")
+    List<Paciente> listarPacientesDelProfesional(@Param("profesionalId") String profesionalId);
 
 }

@@ -3,7 +3,6 @@ package com.crisdev.saludservice.service;
 import com.crisdev.saludservice.enums.DiaSemana;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.HorarioLaboral;
-import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class HorarioLaboralService {

@@ -10,7 +10,8 @@ import com.crisdev.saludservice.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -78,12 +79,11 @@ public class UtilController {
 
         Profesional profe = profesionalRepository.save(profesional);
 
-        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(1));
-        turnoService.generarTurnos(profe.getId(),profesional.getHorarioLaboral().get(0));
+        turnoService.generarTurnos(profe.getId(), profesional.getHorarioLaboral().get(1));
+        turnoService.generarTurnos(profe.getId(), profesional.getHorarioLaboral().get(0));
 
         return "redirect:/profesional/listarProfesionales";
     }
-
     @GetMapping("/pacienteRandom")
     public String crearPaciente() throws MiException {
 
