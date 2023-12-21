@@ -1,6 +1,7 @@
 package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.model.Paciente;
+import com.crisdev.saludservice.service.ConsultaService;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class PacienteController {
 //
     @Autowired
     TurnoService turnoService;
+    @Autowired
+    ConsultaService consultaService;
 
     @PreAuthorize("hasAnyRole('PACIENTE','ADMIN')")
     @GetMapping("/dashboard")
@@ -30,9 +33,20 @@ public class PacienteController {
 
         Paciente paciente = (Paciente) session.getAttribute("usuariosession");
 
-        var turnos = turnoService.listarTurnosPaciente(paciente.getId());
+        var turnos = turnoService.listarTurnosPaciente(paciente);
         modelMap.addAttribute("turnos", turnos);
 
         return "paciente_citas";
+    }
+
+    @GetMapping("/listarConsultas")
+    public String listarConsultas(HttpSession session, ModelMap modelMap) {
+
+        Paciente paciente = (Paciente) session.getAttribute("usuariosession");
+
+        var consultas = consultaService.listarConsultasPaciente(paciente);
+        modelMap.addAttribute("consultas", consultas);
+
+        return "paciente_consultas";
     }
 }

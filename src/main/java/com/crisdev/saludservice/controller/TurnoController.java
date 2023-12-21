@@ -15,7 +15,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @Controller
 @RequestMapping("/turno")
@@ -35,7 +34,7 @@ public class TurnoController {
     public String verTurnos(ModelMap modelMap, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "15") int size) {
 
         PageRequest pageable = PageRequest.of(page, size);
-        Page<Turno> turnos = turnoService.listarTurnos(pageable);
+        Page<Turno> turnos = turnoService.listarTurnosDisponibles(pageable);
 
         modelMap.addAttribute("turnos", turnos);
         return "turno_lista";

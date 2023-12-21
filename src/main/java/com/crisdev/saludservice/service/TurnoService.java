@@ -5,8 +5,6 @@ import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
-import com.crisdev.saludservice.repository.HorarioLaboralRepository;
-import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,32 +22,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @Service
 public class TurnoService {
 
     @Autowired
     TurnoRepository turnoRepository;
-//    @Autowired
-//    PacienteRepository pacienteRepository;
-//    @Autowired
-//    HorarioLaboralRepository horarioLaboralRepository;
     @Autowired
     ProfesionalRepository profesionalRepository;
-
     @Autowired
     ProfesionalService profesionalService;
-
-//    public TurnoService(TurnoRepository turnoRepository, HorarioLaboralRepository horarioLaboralRepository, ProfesionalRepository profesionalRepository, PacienteRepository pacienteRepository, PacienteService pacienteService, ProfesionalService profesionalService) {
-//        this.turnoRepository = turnoRepository;
-//        this.horarioLaboralRepository = horarioLaboralRepository;
-//        this.profesionalRepository = profesionalRepository;
-//        this.pacienteRepository = pacienteRepository;
-//        this.pacienteService = pacienteService;
-//        this.profesionalService = profesionalService;
-//    }
-//
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
 
 
@@ -115,9 +96,11 @@ public class TurnoService {
         return turnosDia;
     }
 
-    public Page<Turno> listarTurnos(PageRequest pageable) {
+    public Page<Turno> listarTurnosDisponibles(PageRequest pageable) {
 
-        return turnoRepository.findAll(pageable);
+
+
+        return turnoRepository.findByDisponible(true,pageable);
 
     }
 
@@ -149,23 +132,6 @@ public class TurnoService {
         turnoRepository.save(turno);
     }
 
-    public List<Turno> listarTurnosPaciente(String id) {
-//        try {
-//            // Buscar al paciente por su ID
-//            Paciente paciente = pacienteService.buscarPacientePorId(id);
-//
-//            // Verificar si el paciente existe
-//            if (paciente == null) {
-//                throw new MiException("El paciente con ID " + id + " no existe");
-//            }
-            // Retornar la lista de turnos del paciente
-//            return turnoRepository.findByPacienteId(paciente.getId());
-//        } catch (MiException e) {
-//            throw new RuntimeException(e);
-//        }
-            return null;
-    }
-
     public Object listarTurnosReservados(String id) {
         try {
             // Buscar al profesional por su ID
@@ -188,5 +154,9 @@ public class TurnoService {
         turno.setAtendido(true);
         turnoRepository.save(turno);
 
+    }
+
+    public List<Turno> listarTurnosPaciente(Paciente paciente) {
+            return turnoRepository.findNoAtendidoByPacienteId(paciente.getId());
     }
 }

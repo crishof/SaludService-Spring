@@ -56,8 +56,6 @@ ConsultaService consultaService;
             return "redirect:/profesional/listarCitas";
 
         }
-
-
         return "redirect:/profesional/listarCitas";
     }
 
