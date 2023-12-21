@@ -20,7 +20,6 @@
                 <th scope="col">Profesional</th>
                 <th scope="col">Especialidad</th>
                 <th th:scope="col">Valoración</th>
-                <th scope="col">Acciones</th>
 
             </tr>
             </thead>
@@ -30,19 +29,17 @@
                 <td th:text="${consulta.hora}"></td>
                 <td th:text="${consulta.profesional.apellido} + ', ' + ${consulta.profesional.nombre}"></td>
                 <td th:text="${consulta.profesional.especialidad}"></td>
-                <td>
-                    <a th:text="${consulta.valoracion}" class="btn btn-success">Cancelar</a>
+                <td th:if="${consulta.valoracion != 0}">
+                    <div  th:text="${consulta.valoracion}" class="btn btn-success">Cancelar</div>
                 </td>
-                <td>
-                    <a class="btn btn-primary">Valorar</a>
+                <td th:if="${consulta.valoracion == 0}">
+                    <div th:replace="../layout/valoration_radios :: valoracion(consulta=${consulta})"></div>
                 </td>
             </tr>
             </tbody>
         </table>
-        <!--        <a class="btn btn-secondary" th:href="@~{/}">Volver</a>-->
 
         <button class="btn btn-secondary" onclick="goBack()">Volver</button>
-
 
     </div>
 

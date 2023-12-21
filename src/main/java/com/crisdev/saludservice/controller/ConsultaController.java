@@ -59,5 +59,17 @@ ConsultaService consultaService;
         return "redirect:/profesional/listarCitas";
     }
 
+    @PostMapping("/valorar")
+    public String valorarConsulta(@RequestParam String idConsulta, @RequestParam int estrellas){
+
+
+        System.out.println("idConsulta = " + idConsulta);
+        System.out.println("estrellas = " + estrellas);
+
+        consultaService.valorarConsulta(idConsulta,estrellas);
+
+        return "redirect:/paciente/listarConsultas";
+    }
+
 }
 
