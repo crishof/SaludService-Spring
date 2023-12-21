@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <form th:action="@{/registrarPaciente}" method="post">
+                <form th:action="@{/consulta/crearConsulta}" method="post">
 
                     <input hidden th:value="${turno.id}" name="idTurno">
                     <div class="form-group">

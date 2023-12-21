@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Service
 public class TurnoService {
 
@@ -178,5 +180,13 @@ public class TurnoService {
         } catch (MiException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void atenderTurno(String idTurno) {
+
+        Turno turno = buscarPorId(idTurno);
+        turno.setAtendido(true);
+        turnoRepository.save(turno);
+
     }
 }

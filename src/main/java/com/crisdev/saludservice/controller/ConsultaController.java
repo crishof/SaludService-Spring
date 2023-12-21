@@ -49,6 +49,7 @@ ConsultaService consultaService;
         try {
             Profesional profesional = (Profesional) session.getAttribute("usuariosession");
             consultaService.crearConsulta(idTurno, motivo, antecedentes, diagnostico, indicaciones, observaciones, profesional);
+            turnoService.atenderTurno(idTurno);
             modelMap.addAttribute("exito", "Consulta registrada con éxito");
         } catch (MiException e) {
             modelMap.addAttribute("error", e.getMessage());
