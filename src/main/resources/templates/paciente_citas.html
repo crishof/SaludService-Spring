@@ -32,7 +32,7 @@
                 <td th:text="${turno.profesional.especialidad}"></td>
                 <td th:text="'$ ' + ${turno.profesional.precioConsulta}"></td>
                 <td>
-                    <a th:if="${!turno.isAtendido()}" class="btn btn-danger">Cancelar</a>
+                    <a th:href="@{/turno/cancelarTurno/__${turno.id}__}" class="btn btn-danger">Cancelar</a>
                 </td>
             </tr>
             </tbody>

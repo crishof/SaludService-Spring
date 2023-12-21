@@ -31,6 +31,7 @@ public class TurnoService {
     ProfesionalRepository profesionalRepository;
     @Autowired
     ProfesionalService profesionalService;
+
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
 
 
@@ -99,8 +100,7 @@ public class TurnoService {
     public Page<Turno> listarTurnosDisponibles(PageRequest pageable) {
 
 
-
-        return turnoRepository.findByDisponible(true,pageable);
+        return turnoRepository.findByDisponible(true, pageable);
 
     }
 
@@ -157,6 +157,18 @@ public class TurnoService {
     }
 
     public List<Turno> listarTurnosPaciente(Paciente paciente) {
-            return turnoRepository.findNoAtendidoByPacienteId(paciente.getId());
+        return turnoRepository.findNoAtendidoByPacienteId(paciente.getId());
+    }
+
+    public void cancelarTurno(String idTurno) {
+
+        Optional<Turno> respuesta = turnoRepository.findById(idTurno);
+
+        if (respuesta.isPresent()) {
+            Turno turno = respuesta.get();
+            turno.setDisponible(true);
+            turno.setPaciente(null);
+            turnoRepository.save(turno);
+        }
     }
 }

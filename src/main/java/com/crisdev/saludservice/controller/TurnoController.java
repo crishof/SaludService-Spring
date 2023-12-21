@@ -60,4 +60,12 @@ public class TurnoController {
         return "redirect:/paciente/listarCitas";
     }
 
+    @GetMapping("/cancelarTurno/{id}")
+    public String cancelarTurno(@PathVariable String id){
+
+        turnoService.cancelarTurno(id);
+
+        return "redirect:/paciente/listarCitas";
+    }
+
 }
