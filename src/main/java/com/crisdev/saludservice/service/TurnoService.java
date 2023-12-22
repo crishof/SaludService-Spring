@@ -6,7 +6,6 @@ import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.repository.TurnoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -24,11 +23,13 @@ import java.util.Optional;
 @Service
 public class TurnoService {
 
-    @Autowired
-    TurnoRepository turnoRepository;
+    final TurnoRepository turnoRepository;
+    final ProfesionalService profesionalService;
 
-    @Autowired
-    ProfesionalService profesionalService;
+    public TurnoService(TurnoRepository turnoRepository, ProfesionalService profesionalService) {
+        this.turnoRepository = turnoRepository;
+        this.profesionalService = profesionalService;
+    }
 
     public void generarTurnos(String idProfesional, HorarioLaboral horario) {
 

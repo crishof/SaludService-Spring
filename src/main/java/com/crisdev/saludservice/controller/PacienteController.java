@@ -2,9 +2,7 @@ package com.crisdev.saludservice.controller;
 
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.service.ConsultaService;
-import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.TurnoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,11 +14,14 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/paciente")
 public class PacienteController {
-//
-    @Autowired
-    TurnoService turnoService;
-    @Autowired
-    ConsultaService consultaService;
+
+    final TurnoService turnoService;
+    final ConsultaService consultaService;
+
+    public PacienteController(TurnoService turnoService, ConsultaService consultaService) {
+        this.turnoService = turnoService;
+        this.consultaService = consultaService;
+    }
 
     @PreAuthorize("hasAnyRole('PACIENTE','ADMIN')")
     @GetMapping("/dashboard")

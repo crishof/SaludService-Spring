@@ -8,7 +8,6 @@ import com.crisdev.saludservice.service.ConsultaService;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.TurnoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -19,14 +18,17 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/consulta")
 public class ConsultaController {
 
-@Autowired
-TurnoService turnoService;
-@Autowired
-PacienteService pacienteService;
-@Autowired
-ConsultaService consultaService;
-@Autowired
-    ProfesionalService profesionalService;
+    final TurnoService turnoService;
+    final PacienteService pacienteService;
+    final ConsultaService consultaService;
+    final ProfesionalService profesionalService;
+
+    public ConsultaController(TurnoService turnoService, PacienteService pacienteService, ConsultaService consultaService, ProfesionalService profesionalService) {
+        this.turnoService = turnoService;
+        this.pacienteService = pacienteService;
+        this.consultaService = consultaService;
+        this.profesionalService = profesionalService;
+    }
 
 
     @GetMapping("/atenderConsulta/{id}")
@@ -65,13 +67,13 @@ ConsultaService consultaService;
     }
 
     @PostMapping("/valorar")
-    public String valorarConsulta(@RequestParam String idConsulta, @RequestParam int estrellas){
+    public String valorarConsulta(@RequestParam String idConsulta, @RequestParam int estrellas) {
 
 
         System.out.println("idConsulta = " + idConsulta);
         System.out.println("estrellas = " + estrellas);
 
-        consultaService.valorarConsulta(idConsulta,estrellas);
+        consultaService.valorarConsulta(idConsulta, estrellas);
         profesionalService.valorarProfesional(idConsulta);
 
         return "redirect:/paciente/listarConsultas";

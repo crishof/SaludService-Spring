@@ -6,8 +6,6 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.model.Usuario;
-import com.crisdev.saludservice.repository.PacienteRepository;
-import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.UsuarioRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -34,7 +32,7 @@ public class UsuarioService implements UserDetailsService {
     final ImagenService imagenService;
     final UbicacionService ubicacionService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
         this.usuarioRepository = usuarioRepository;
         this.utilService = utilService;
         this.imagenService = imagenService;

@@ -7,10 +7,8 @@ import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.TurnoService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +19,17 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/turno")
 public class TurnoController {
 
-    @Autowired
-    TurnoService turnoService;
-    @Autowired
-    ProfesionalService profesionalService;
-    @Autowired
-    ProfesionalRepository profesionalRepository;
-    @Autowired
-    PacienteService pacienteService;
+    final TurnoService turnoService;
+    final ProfesionalService profesionalService;
+    final ProfesionalRepository profesionalRepository;
+    final PacienteService pacienteService;
+
+    public TurnoController(TurnoService turnoService, ProfesionalService profesionalService, ProfesionalRepository profesionalRepository, PacienteService pacienteService) {
+        this.turnoService = turnoService;
+        this.profesionalService = profesionalService;
+        this.profesionalRepository = profesionalRepository;
+        this.pacienteService = pacienteService;
+    }
 
 
     @GetMapping("/verTurnos")
@@ -53,7 +54,7 @@ public class TurnoController {
     }
 
     @PostMapping("/confirmarTurno/{id}")
-    public String confirmarTurno(@PathVariable String id, HttpSession session, ModelMap modelMap) throws MiException {
+    public String confirmarTurno(@PathVariable String id, HttpSession session) throws MiException {
 
         Paciente paciente = (Paciente) session.getAttribute("usuariosession");
         turnoService.confirmarTurno(id, paciente);
@@ -62,7 +63,7 @@ public class TurnoController {
     }
 
     @GetMapping("/cancelarTurno/{id}")
-    public String cancelarTurno(@PathVariable String id){
+    public String cancelarTurno(@PathVariable String id) {
 
         turnoService.cancelarTurno(id);
 

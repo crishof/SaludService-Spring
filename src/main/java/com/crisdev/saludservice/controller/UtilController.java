@@ -7,7 +7,6 @@ import com.crisdev.saludservice.repository.HorarioLaboralRepository;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,32 +21,28 @@ import java.util.*;
 @RequestMapping("/util")
 public class UtilController {
 
-    @Autowired
-    ProfesionalService profesionalService;
-
-    @Autowired
-    PacienteService pacienteService;
-
-    @Autowired
-    ProfesionalRepository profesionalRepository;
-
-    @Autowired
-    UbicacionService ubicacionService;
-
-    @Autowired
-    UtilService utilService;
-
-    @Autowired
-    PacienteRepository pacienteRepository;
-
-    @Autowired
-    ImagenService imagenService;
-    @Autowired
-    HorarioLaboralRepository horarioLaboralRepository;
-
-    @Autowired
-    TurnoService turnoService;
+    final ProfesionalService profesionalService;
+    final PacienteService pacienteService;
+    final ProfesionalRepository profesionalRepository;
+    final UbicacionService ubicacionService;
+    final UtilService utilService;
+    final PacienteRepository pacienteRepository;
+    final ImagenService imagenService;
+    final HorarioLaboralRepository horarioLaboralRepository;
+    final TurnoService turnoService;
     Random random = new Random();
+
+    public UtilController(ProfesionalService profesionalService, PacienteService pacienteService, ProfesionalRepository profesionalRepository, UbicacionService ubicacionService, UtilService utilService, PacienteRepository pacienteRepository, ImagenService imagenService, HorarioLaboralRepository horarioLaboralRepository, TurnoService turnoService) {
+        this.profesionalService = profesionalService;
+        this.pacienteService = pacienteService;
+        this.profesionalRepository = profesionalRepository;
+        this.ubicacionService = ubicacionService;
+        this.utilService = utilService;
+        this.pacienteRepository = pacienteRepository;
+        this.imagenService = imagenService;
+        this.horarioLaboralRepository = horarioLaboralRepository;
+        this.turnoService = turnoService;
+    }
 
     @GetMapping("/profesionalRandom")
     public String crearProfesional() throws MiException {
@@ -84,6 +79,7 @@ public class UtilController {
 
         return "redirect:/profesional/listarProfesionales";
     }
+
     @GetMapping("/pacienteRandom")
     public String crearPaciente() throws MiException {
 

@@ -10,7 +10,6 @@ import com.crisdev.saludservice.service.UtilService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
@@ -88,7 +87,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/perfil/{id}")
-    public String actualizar(MultipartFile archivo, @PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, String fechaNacimientoStr, @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
+    public String actualizar(@PathVariable String id, @RequestParam String nombre, @RequestParam String apellido, String fechaNacimientoStr, @RequestParam(required = false) Long dni, @RequestParam String email, ModelMap model, RedirectAttributes redirectAttributes, HttpSession session) {
 
         model.put("usuario", session);
         try {

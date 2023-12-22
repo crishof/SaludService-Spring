@@ -7,7 +7,6 @@ import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,16 +23,19 @@ import java.util.List;
 @RequestMapping("/profesional")
 public class ProfesionalController {
 
-    @Autowired
-    ProfesionalService profesionalService;
-    @Autowired
-    HorarioLaboralService horarioLaboralService;
-    @Autowired
-    UtilService utilService;
-    @Autowired
-    TurnoService turnoService;
-    @Autowired
-    ConsultaService consultaService;
+    final ProfesionalService profesionalService;
+    final HorarioLaboralService horarioLaboralService;
+    final UtilService utilService;
+    final TurnoService turnoService;
+    final ConsultaService consultaService;
+
+    public ProfesionalController(ProfesionalService profesionalService, HorarioLaboralService horarioLaboralService, UtilService utilService, TurnoService turnoService, ConsultaService consultaService) {
+        this.profesionalService = profesionalService;
+        this.horarioLaboralService = horarioLaboralService;
+        this.utilService = utilService;
+        this.turnoService = turnoService;
+        this.consultaService = consultaService;
+    }
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {

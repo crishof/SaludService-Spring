@@ -7,7 +7,6 @@ import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.PacienteRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,17 +17,19 @@ import java.time.LocalDate;
 @Service
 public class PacienteService {
 
-    @Autowired
-    TurnoService turnoService;
+    final TurnoService turnoService;
+    final PacienteRepository pacienteRepository;
+    final UtilService utilService;
+    final ImagenService imagenService;
+    final UbicacionService ubicacionService;
 
-    @Autowired
-    PacienteRepository pacienteRepository;
-    @Autowired
-    UtilService utilService;
-    @Autowired
-    ImagenService imagenService;
-    @Autowired
-    UbicacionService ubicacionService;
+    public PacienteService(TurnoService turnoService, PacienteRepository pacienteRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
+        this.turnoService = turnoService;
+        this.pacienteRepository = pacienteRepository;
+        this.utilService = utilService;
+        this.imagenService = imagenService;
+        this.ubicacionService = ubicacionService;
+    }
 
     public void crearPaciente(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, String email, String password, String password2) throws ParseException, MiException {
 
