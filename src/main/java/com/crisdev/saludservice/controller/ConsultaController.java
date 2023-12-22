@@ -6,6 +6,7 @@ import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.service.ConsultaService;
 import com.crisdev.saludservice.service.PacienteService;
+import com.crisdev.saludservice.service.ProfesionalService;
 import com.crisdev.saludservice.service.TurnoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +25,8 @@ TurnoService turnoService;
 PacienteService pacienteService;
 @Autowired
 ConsultaService consultaService;
+@Autowired
+    ProfesionalService profesionalService;
 
 
     @GetMapping("/atenderConsulta/{id}")
@@ -48,7 +51,9 @@ ConsultaService consultaService;
 
         try {
             Profesional profesional = (Profesional) session.getAttribute("usuariosession");
-            consultaService.crearConsulta(idTurno, motivo, antecedentes, diagnostico, indicaciones, observaciones, profesional);
+
+            Paciente paciente = pacienteService.buscarPacientePorIdTurno(idTurno);
+            consultaService.crearConsulta(paciente, motivo, antecedentes, diagnostico, indicaciones, observaciones, profesional);
             turnoService.atenderTurno(idTurno);
             modelMap.addAttribute("exito", "Consulta registrada con éxito");
         } catch (MiException e) {
@@ -67,6 +72,7 @@ ConsultaService consultaService;
         System.out.println("estrellas = " + estrellas);
 
         consultaService.valorarConsulta(idConsulta,estrellas);
+        profesionalService.valorarProfesional(idConsulta);
 
         return "redirect:/paciente/listarConsultas";
     }

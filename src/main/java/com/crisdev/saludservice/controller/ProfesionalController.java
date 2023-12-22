@@ -32,6 +32,8 @@ public class ProfesionalController {
     UtilService utilService;
     @Autowired
     TurnoService turnoService;
+    @Autowired
+    ConsultaService consultaService;
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {

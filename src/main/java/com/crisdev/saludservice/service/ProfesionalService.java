@@ -29,14 +29,8 @@ public class ProfesionalService {
     ImagenService imagenService;
     @Autowired
     UbicacionService ubicacionService;
-
-
-    public ProfesionalService(UtilService utilService, ProfesionalRepository profesionalRepository, ImagenService imagenService, UbicacionService ubicacionService) {
-        this.utilService = utilService;
-        this.profesionalRepository = profesionalRepository;
-        this.imagenService = imagenService;
-        this.ubicacionService = ubicacionService;
-    }
+    @Autowired
+    ConsultaService consultaService;
 
     public void crearProfesional(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, Long matricula, MultipartFile diploma, Especialidad especialidad, String email, String password, String password2) throws MiException, ParseException {
 
@@ -116,22 +110,34 @@ public class ProfesionalService {
 
     public void actualizarPrecioConsulta(String id, double precio) throws MiException {
 
-        Optional<Profesional> respuesta = profesionalRepository.findById(id);
-
-        try {
-            if (respuesta.isPresent()) {
-                Profesional profesional = respuesta.get();
-                profesional.setPrecioConsulta(precio);
-                profesionalRepository.save(profesional);
-            }
-        } catch (Exception e) {
-            throw new MiException(e.getMessage());
-        }
+        Profesional profesional = buscarPorId(id);
+        profesional.setPrecioConsulta(precio);
+        profesionalRepository.save(profesional);
     }
 
     public List<Paciente> listarPacientesDelProfesional(String id) {
 
         return profesionalRepository.listarPacientesDelProfesional(id);
+    }
+
+    public void valorarProfesional(String idConsulta) {
+
+        Consulta consulta = consultaService.findConsultaById(idConsulta);
+        Profesional profesional = buscarPorId(consulta.getProfesional().getId());
+
+        List<Consulta> consultasProfesional = consultaService.findAllByProfesional(profesional);
+
+        consultasProfesional.add(consulta);
+
+        double sumarValoraciones = consultasProfesional.stream().mapToDouble(Consulta::getValoracion).sum();
+        double promedio = consultasProfesional.isEmpty() ? 0 : sumarValoraciones / consultasProfesional.size();
+
+        double promedioRedondeado = (double) Math.round(promedio * 100) / 100;
+
+        profesional.setValoracion(promedioRedondeado);
+
+        profesionalRepository.save(profesional);
+
     }
 }
 
