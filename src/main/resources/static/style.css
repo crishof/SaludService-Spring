@@ -43,8 +43,8 @@ label {
 }
 
 .clasificacion{
-    direction: ltr;
-    /*direction: rtl; right to left */
+    /*direction: ltr;*/
+    direction: rtl; /*right to left */
     unicode-bidi: bidi-override;/* bidi de bidireccional */
 }
 
