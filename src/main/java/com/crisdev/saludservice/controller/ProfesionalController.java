@@ -48,6 +48,18 @@ public class ProfesionalController {
         return "profesional_lista";
     }
 
+    @GetMapping("/buscarProfesional")
+    public String buscarProfesional(@RequestParam String texto, ModelMap modelo) {
+
+
+        List<Profesional> profesionales = profesionalService.buscarProfesionales(texto);
+        modelo.addAttribute("profesionales", profesionales);
+        Especialidad[] especialidades = Especialidad.values();
+        modelo.addAttribute("especialidades", especialidades);
+        return "profesional_lista";
+    }
+
+
     @PreAuthorize("hasAnyRole('PROFESIONAL','ADMIN')")
     @GetMapping("/dashboard")
     public String panel() {

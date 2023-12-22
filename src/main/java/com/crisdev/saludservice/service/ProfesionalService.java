@@ -105,7 +105,7 @@ public class ProfesionalService {
 
     public Profesional buscarPorEmail(String email) {
 
-        return profesionalRepository.buscarPorEmail(email);
+        return profesionalRepository.findByEmail(email);
     }
 
     public void actualizarPrecioConsulta(String id, double precio) throws MiException {
@@ -138,6 +138,11 @@ public class ProfesionalService {
 
         profesionalRepository.save(profesional);
 
+    }
+
+    public List<Profesional> buscarProfesionales(String texto) {
+
+        return profesionalRepository.findByNombreApellidoEspecialidad(texto);
     }
 }
 

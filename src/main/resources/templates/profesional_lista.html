@@ -14,6 +14,11 @@
 
     <div th:replace="../layout/filtro_profesionales :: filtro"></div>
 
+    <form class="d-flex" role="search" th:action="@{/profesional/buscarProfesional}">
+        <input class="form-control me-2" type="buscar" name="texto" placeholder="buscar" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Buscar</button>
+    </form>
+
     <div class="container">
         <div class="text-center m-4">
             <h3>Listado de Profesionales Activos</h3>
