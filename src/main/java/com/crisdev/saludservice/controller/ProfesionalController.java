@@ -146,6 +146,6 @@ public class ProfesionalController {
         List<Paciente> pacientes = profesionalService.listarPacientesDelProfesional(profesional.getId());
         modelMap.addAttribute("pacientes", pacientes);
 
-        return "profesional_citas";
+        return "profesional_listaPacientes";
     }
 }
