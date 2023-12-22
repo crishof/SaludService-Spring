@@ -12,7 +12,7 @@
                         th:text="${especialidad}">
                 </option>
             </select>
-<br>
+            <br>
             <label for="ordenar">Ordenar por:</label>
             <select id="ordenar" name="columna" class="form-select">
                 <option th:if="${ordenSeleccionado != null and ordenSeleccionado != ''}"
@@ -22,7 +22,9 @@
 
                 <option th:unless="${ordenSeleccionado == 'apellido'}" value="apellido">Apellido</option>
                 <option th:unless="${ordenSeleccionado == 'nombre'}" value="nombre">Nombre</option>
-                <option th:unless="${ordenSeleccionado == 'especialidad' or (valorSeleccionado != null and valorSeleccionado != '')}" value="especialidad">Especialidad</option>
+                <option th:unless="${ordenSeleccionado == 'especialidad' or (valorSeleccionado != null and valorSeleccionado != '')}"
+                        value="especialidad">Especialidad
+                </option>
 
             </select>
 

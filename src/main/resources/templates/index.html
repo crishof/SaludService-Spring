@@ -2,7 +2,6 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
         lang="en"
 >
 
@@ -15,18 +14,8 @@
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
 
-    <h1>Index</h1>
-
     <div class="container m-2">
-        <h3>Listas de usuarios</h3>
         <a class="btn btn-primary" th:href="@{/profesional/listarProfesionales}">Lista profesionales</a>
-    </div>
-
-
-    <div th:if="${session.usuariosession != null}">
-        <h2>FOTO DE PERFIL</h2>
-        <img class="logo" th:src="@{/imagen/perfil/__${session.usuariosession.id}__}" alt=""
-             style="width: 100px; border-radius:50px">
     </div>
 
 </div>

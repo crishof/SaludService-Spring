@@ -5,7 +5,6 @@ import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
 import com.crisdev.saludservice.model.Turno;
-import com.crisdev.saludservice.repository.ProfesionalRepository;
 import com.crisdev.saludservice.repository.TurnoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,8 +26,7 @@ public class TurnoService {
 
     @Autowired
     TurnoRepository turnoRepository;
-    @Autowired
-    ProfesionalRepository profesionalRepository;
+
     @Autowired
     ProfesionalService profesionalService;
 
@@ -37,10 +35,9 @@ public class TurnoService {
 
         List<Turno> turnos = new ArrayList<>();
 
-        Optional<Profesional> respuesta = profesionalRepository.findById(idProfesional);
+        Profesional profesional = profesionalService.buscarPorId(idProfesional);
 
-        if (respuesta.isPresent()) {
-            Profesional profesional = respuesta.get();
+        if (profesional != null) {
 
             LocalDate fechaActual = LocalDate.now();
             LocalDate fechaLimite = fechaActual.plusMonths(2);

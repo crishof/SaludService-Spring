@@ -20,4 +20,5 @@ public class Profesional extends Usuario {
     @OneToMany
     private List<HorarioLaboral> horarioLaboral;
     private double precioConsulta;
+    private double valoracion;
 }

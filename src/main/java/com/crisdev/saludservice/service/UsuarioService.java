@@ -30,16 +30,12 @@ import java.util.Optional;
 public class UsuarioService implements UserDetailsService {
 
     final UsuarioRepository usuarioRepository;
-    final PacienteRepository pacienteRepository;
-    final ProfesionalRepository profesionalRepository;
     final UtilService utilService;
     final ImagenService imagenService;
     final UbicacionService ubicacionService;
 
     public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
         this.usuarioRepository = usuarioRepository;
-        this.pacienteRepository = pacienteRepository;
-        this.profesionalRepository = profesionalRepository;
         this.utilService = utilService;
         this.imagenService = imagenService;
         this.ubicacionService = ubicacionService;

@@ -32,6 +32,8 @@ public class ProfesionalController {
     UtilService utilService;
     @Autowired
     TurnoService turnoService;
+    @Autowired
+    ConsultaService consultaService;
 
     @GetMapping("/listarProfesionales")
     public String listarProfesionales(@Param("especialidad") String especialidad, @Param("columna") String columna, ModelMap modelo) {
@@ -45,6 +47,18 @@ public class ProfesionalController {
         modelo.addAttribute("ordenSeleccionado", columna);
         return "profesional_lista";
     }
+
+    @GetMapping("/buscarProfesional")
+    public String buscarProfesional(@RequestParam String texto, ModelMap modelo) {
+
+
+        List<Profesional> profesionales = profesionalService.buscarProfesionales(texto);
+        modelo.addAttribute("profesionales", profesionales);
+        Especialidad[] especialidades = Especialidad.values();
+        modelo.addAttribute("especialidades", especialidades);
+        return "profesional_lista";
+    }
+
 
     @PreAuthorize("hasAnyRole('PROFESIONAL','ADMIN')")
     @GetMapping("/dashboard")
@@ -144,6 +158,6 @@ public class ProfesionalController {
         List<Paciente> pacientes = profesionalService.listarPacientesDelProfesional(profesional.getId());
         modelMap.addAttribute("pacientes", pacientes);
 
-        return "profesional_citas";
+        return "profesional_listaPacientes";
     }
 }
