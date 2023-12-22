@@ -6,14 +6,13 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
 @Data
-public class Turno {
-
+@Entity
+public class Consulta {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -21,10 +20,16 @@ public class Turno {
 
     private LocalDate fecha;
     private LocalTime hora;
-    @OneToOne
+    private String motivo;
+    private String antecedentes;
+    private String diagnostico;
+    private String indicaciones;
+    private String observaciones;
+    @ManyToOne
     private Profesional profesional;
-    @OneToOne
+    @ManyToOne
     private Paciente paciente;
-    private boolean disponible;
+    private int valoracion;
     private boolean atendido;
+
 }

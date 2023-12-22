@@ -6,7 +6,6 @@ import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.service.PacienteService;
 import com.crisdev.saludservice.service.ProfesionalService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +23,6 @@ public class inicioController {
 
     @Autowired
     ProfesionalService profesionalService;
-
     @Autowired
     PacienteService pacienteService;
 
@@ -42,20 +40,24 @@ public class inicioController {
         return "login";
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_PROFESIONAL','ROLE_PACIENTE','ROLE_ADMIN')")
     @GetMapping("/inicio")
     public String inicio(HttpSession session) {
 
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
 
-        System.out.println(logueado.getRol().toString());
+        if (logueado == null || logueado.getRol() == null) {
+            return "index";
+        }
+        if (logueado.getRol().toString().equals("PACIENTE")) {
+            return "redirect:/paciente/dashboard";
+        }
         if (logueado.getRol().toString().equals("ADMIN")) {
             return "redirect:/admin/dashboard";
         }
         if (logueado.getRol().toString().equals("PROFESIONAL")) {
             return "redirect:/profesional/dashboard";
         }
-        return "dashboard_paciente";
+        return "index";
     }
 
     @GetMapping("/registroProfesional")

@@ -1,0 +1,43 @@
+<div class="container" th:fragment="valoracion">
+    <form th:action="@{/consulta/valorar}" method="post">
+        <label>
+            <input hidden th:value="${consulta.id}" name="idConsulta">
+        </label>
+        <p class="clasificacion">
+            <input id="radio1" type="radio" name="estrellas" value="5"><!--
+    --><label for="radio1">★</label><!--
+    --><input id="radio2" type="radio" name="estrellas" value="4"><!--
+    --><label for="radio2">★</label><!--
+    --><input id="radio3" type="radio" name="estrellas" value="3" ><!--
+    --><label for="radio3">★</label><!--
+    --><input id="radio4" type="radio" name="estrellas" value="2" ><!--
+    --><label for="radio4">★</label><!--
+    --><input id="radio5" type="radio" name="estrellas" value="1" ><!--
+    --><label for="radio5">★</label>
+        </p>
+        <button th:if="${consulta.valoracion == 0}" type="submit" class="btn btn-small-primary">Valorar</button>
+    </form>
+</div>
+
+
+<div class="container" th:fragment="stars">
+    <form th:action="@{/consulta/valorar}" method="post">
+        <label>
+            <input hidden th:value="${consulta.id}" name="idConsulta">
+        </label>
+        <p class="clasificacion">
+            <input id="radio11" type="radio" name="estrellas" value="5"
+                   th:checked="${consulta.valoracion == 5}"><!--
+    --><label for="radio11">★</label><!--
+    --><input id="radio22" type="radio" name="estrellas" value="4" th:checked="${consulta.valoracion == 4}"><!--
+    --><label for="radio22">★</label><!--
+    --><input id="radio33" type="radio" name="estrellas" value="3" th:checked="${consulta.valoracion == 3}"><!--
+    --><label for="radio33">★</label><!--
+    --><input id="radio44" type="radio" name="estrellas" value="2" th:checked="${consulta.valoracion == 2}"><!--
+    --><label for="radio44">★</label><!--
+    --><input id="radio55" type="radio" name="estrellas" value="1" th:checked="${consulta.valoracion == 1}"><!--
+    --><label for="radio55">★</label>
+        </p>
+        <button th:if="${consulta.valoracion == 0}" type="submit" class="btn btn-small-primary">Valorar</button>
+    </form>
+</div>

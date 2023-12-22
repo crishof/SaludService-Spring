@@ -1,7 +1,10 @@
 package com.crisdev.saludservice.service;
 
+import com.crisdev.saludservice.enums.Pais;
+import com.crisdev.saludservice.enums.Provincia;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
+import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.model.Usuario;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import com.crisdev.saludservice.repository.ProfesionalRepository;
@@ -18,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,23 +29,16 @@ import java.util.Optional;
 @Service
 public class UsuarioService implements UserDetailsService {
 
-    final
-    UsuarioRepository usuarioRepository;
-    final
-    PacienteRepository pacienteRepository;
-    final
-    ProfesionalRepository profesionalRepository;
-    final
-    UtilService utilService;
-    final
-    ImagenService imagenService;
+    final UsuarioRepository usuarioRepository;
+    final UtilService utilService;
+    final ImagenService imagenService;
+    final UbicacionService ubicacionService;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PacienteRepository pacienteRepository, ProfesionalRepository profesionalRepository, UtilService utilService, ImagenService imagenService, UbicacionService ubicacionService) {
         this.usuarioRepository = usuarioRepository;
-        this.pacienteRepository = pacienteRepository;
-        this.profesionalRepository = profesionalRepository;
         this.utilService = utilService;
         this.imagenService = imagenService;
+        this.ubicacionService = ubicacionService;
     }
 
     public Usuario buscarUsuario(String id) throws MiException {
@@ -78,7 +75,7 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepository.findAll();
     }
 
-    public void editarUsuario(String id, String nombre, Long dni, String apellido, String email) throws MiException {
+    public void editarUsuario(String id, String nombre, Long dni, String apellido, String email, LocalDate fechaNacimiento) throws MiException {
 
         Optional<Usuario> respuesta = usuarioRepository.findById(id);
 
@@ -88,14 +85,15 @@ public class UsuarioService implements UserDetailsService {
             usuario.setApellido(apellido);
             usuario.setDni(dni);
             usuario.setEmail(email);
+            usuario.setFechaNacimiento(fechaNacimiento);
             usuarioRepository.save(usuario);
         } else {
             throw new MiException("Usuario no encontrado");
         }
     }
 
-    public void modificar(MultipartFile archivo, String idUsuario, String nombre, String apellido, Long dni, String email) throws MiException {
-        utilService.validarEdit(nombre, apellido, dni, email);
+    public void modificar(MultipartFile archivo, String idUsuario, String nombre, String apellido, String fechaNacimientoStr, Long dni, String email) throws MiException {
+        utilService.validarUsuario(nombre, apellido, fechaNacimientoStr, dni, email);
 
         Optional<Usuario> respuesta = usuarioRepository.findById(idUsuario);
         if (respuesta.isPresent()) {
@@ -113,6 +111,25 @@ public class UsuarioService implements UserDetailsService {
             Imagen imagen = imagenService.actualizar(idImagen, archivo);
             usuario.setFotoPerfil(imagen);
 
+            usuarioRepository.save(usuario);
+        }
+    }
+
+    public void actualizarUbicacion(String id, Pais pais, Provincia provincia, String localidad, String codigoPostal, String domicilio) throws MiException {
+
+        Optional<Usuario> respuesta = usuarioRepository.findById(id);
+        if (respuesta.isPresent()) {
+            Usuario usuario = respuesta.get();
+            Ubicacion ubicacion;
+
+            if (usuario.getUbicacion() == null) {
+                ubicacion = ubicacionService.crearUbicacion(pais, provincia, localidad, codigoPostal, domicilio);
+                usuario.setUbicacion(ubicacion);
+            } else {
+                String idUbicacion = usuario.getUbicacion().getId();
+                ubicacion = ubicacionService.actualizarUbicacion(idUbicacion, pais, provincia, localidad, codigoPostal, domicilio);
+                usuario.setUbicacion(ubicacion);
+            }
             usuarioRepository.save(usuario);
         }
     }

@@ -1,3 +1,43 @@
-<footer th:fragment="footer">
-    <h2>FOOTER</h2>
+<footer th:fragment="footer" class="bg-primary text-light">
+    <div class="container py-3">
+        <div class="row">
+            <div class="col md-6">
+                <h5>Enlaces Rápidos</h5>
+                <ul class="list-unstyled">
+                    <li><a class="text-light" href="#">Inicio</a></li>
+                    <li><a class="text-light" href="#">Servicios</a></li>
+                    <li><a class="text-light" href="#">Facebook</a></li>
+                    <li><a class="text-light" href="#">Twitter</a></li>
+                    <li><a class="text-light" href="#">Instagram</a></li>
+                    <li><a class="text-light" href="#">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="col md-6">
+                <h5>Contacto</h5>
+                <address>
+                    <strong>DocTime</strong><br>
+                    Dirección<br>
+                    Ciudad, País<br>
+                    <abbr title="Teléfono">Tel:</abbr> (123) 456-7890
+                </address>
+
+                <h5>Simulador de registros</h5>
+                <ul>
+                    <li>
+                        <p>Crear profesional <span>
+                    <a th:href="@{/util/profesionalRandom}"><i class="fa fa-database"></i></a></span></p>
+                    </li>
+                    <li>
+                        <p>Crear paciente <span>
+                    <a th:href="@{/util/pacienteRandom}"><i class="fa fa-database"></i></a></span></p>
+                    </li>
+                </ul>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="text-center py-2">
+        <p>&copy; 2023 DocTime. Todos los derechos reservados.</p>
+    </div>
 </footer>

@@ -4,6 +4,8 @@ import com.crisdev.saludservice.enums.Rol;
 import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.Imagen;
 import com.crisdev.saludservice.model.Paciente;
+import com.crisdev.saludservice.model.Turno;
+import com.crisdev.saludservice.model.Ubicacion;
 import com.crisdev.saludservice.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,35 +19,55 @@ import java.time.LocalDate;
 public class PacienteService {
 
     @Autowired
+    TurnoService turnoService;
+
+    @Autowired
+    PacienteRepository pacienteRepository;
+    @Autowired
     UtilService utilService;
     @Autowired
     ImagenService imagenService;
     @Autowired
-    PacienteRepository pacienteRepository;
+    UbicacionService ubicacionService;
 
     public void crearPaciente(String nombre, String apellido, Long dni, String fechaNacimiento, MultipartFile fotoPerfil, String email, String password, String password2) throws ParseException, MiException {
 
         LocalDate fecha;
         try {
-            utilService.validarRegistro(nombre, apellido, fechaNacimiento, dni, email, password, password2);
+            utilService.validarUsuario(nombre, apellido, fechaNacimiento, dni, email);
+            utilService.validarPassword(password, password2);
             fecha = utilService.formatearFecha(fechaNacimiento);
         } catch (MiException e) {
             throw new MiException(e.getMessage());
         }
 
-        Paciente Paciente = new Paciente();
-        Paciente.setNombre(nombre);
-        Paciente.setApellido(apellido);
-        Paciente.setDni(dni);
-        Paciente.setFechaNacimiento(fecha);
-        Paciente.setRol(Rol.PACIENTE);
-        Paciente.setEmail(email);
-        Paciente.setPassword(new BCryptPasswordEncoder().encode(password));
-        Paciente.setFechaAlta(LocalDate.now());
+        Paciente paciente = new Paciente();
+        paciente.setNombre(nombre);
+        paciente.setApellido(apellido);
+        paciente.setDni(dni);
+        paciente.setFechaNacimiento(fecha);
+        paciente.setRol(Rol.PACIENTE);
+        paciente.setEmail(email);
+        paciente.setPassword(new BCryptPasswordEncoder().encode(password));
+        paciente.setFechaAlta(LocalDate.now());
 
         Imagen imagen = imagenService.guardar(fotoPerfil);
-        Paciente.setFotoPerfil(imagen);
+        paciente.setFotoPerfil(imagen);
+        String str = "";
+        Ubicacion ubicacion = ubicacionService.crearUbicacion(null, null, str, str, str);
+        paciente.setUbicacion(ubicacion);
 
-        pacienteRepository.save(Paciente);
+        pacienteRepository.save(paciente);
+    }
+
+    public Paciente buscarPacientePorId(String idPaciente) throws MiException {
+        return pacienteRepository.findById(idPaciente).orElseThrow(() -> new MiException("Paciente no encontrado con ID: " + idPaciente));
+    }
+
+    public Paciente buscarPacientePorIdTurno(String idTurno) throws MiException {
+
+        Turno turno = turnoService.buscarPorId(idTurno);
+
+        return buscarPacientePorId(turno.getPaciente().getId());
     }
 }
