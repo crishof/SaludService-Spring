@@ -44,7 +44,17 @@
                 <td th:text="${profesional.apellido}"></td>
                 <td th:text="${profesional.nombre}"></td>
                 <td th:text="'$ ' + ${profesional.precioConsulta}"></td>
-                <td th:text="${profesional.valoracion}"></td>
+                <td>
+                    <p class="clasificacion">
+    <span th:each="star : ${#numbers.sequence(1, 5)}">
+        <span th:if="${star le profesional.valoracion}">
+            <span style="color: orange;">★</span>
+        </span>
+        <span style="color: gray;" th:unless="${star le profesional.valoracion}">★</span>
+    </span>
+                    </p>
+
+                </td>
                 <td th:text="${profesional.horarioLaboral}"></td>
                 <td th:text="${profesional.ubicacion.provincia}"></td>
                 <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
@@ -54,7 +64,7 @@
             </tr>
             </tbody>
         </table>
-<!--        <a class="btn btn-secondary" th:href="@{/}">Volver</a>-->
+        <!--        <a class="btn btn-secondary" th:href="@{/}">Volver</a>-->
 
         <button class="btn btn-secondary" onclick="goBack()">Volver</button>
 
