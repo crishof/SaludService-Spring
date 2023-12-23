@@ -74,8 +74,8 @@ public class UtilController {
 
         Profesional profe = profesionalRepository.save(profesional);
 
-        turnoService.generarTurnos(profe.getId(), profesional.getHorarioLaboral().get(1));
-        turnoService.generarTurnos(profe.getId(), profesional.getHorarioLaboral().get(0));
+        turnoService.generarTurnos(profe, profesional.getHorarioLaboral().get(1));
+        turnoService.generarTurnos(profe, profesional.getHorarioLaboral().get(0));
 
         return "redirect:/profesional/listarProfesionales";
     }

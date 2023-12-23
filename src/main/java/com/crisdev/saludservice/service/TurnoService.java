@@ -24,19 +24,15 @@ import java.util.Optional;
 public class TurnoService {
 
     final TurnoRepository turnoRepository;
-    final ProfesionalService profesionalService;
 
-    public TurnoService(TurnoRepository turnoRepository, ProfesionalService profesionalService) {
+    public TurnoService(TurnoRepository turnoRepository) {
         this.turnoRepository = turnoRepository;
-        this.profesionalService = profesionalService;
     }
 
-    public void generarTurnos(String idProfesional, HorarioLaboral horario) {
+    public void generarTurnos(Profesional profesional, HorarioLaboral horario) {
 
 
         List<Turno> turnos = new ArrayList<>();
-
-        Profesional profesional = profesionalService.buscarPorId(idProfesional);
 
         if (profesional != null) {
 
@@ -130,14 +126,11 @@ public class TurnoService {
         turnoRepository.save(turno);
     }
 
-    public Object listarTurnosReservados(String id) {
+    public List<Turno> listarTurnosReservados(Profesional profesional) {
         try {
-            // Buscar al profesional por su ID
-            Profesional profesional = profesionalService.buscarPorId(id);
 
-            // Verificar si el profesional existe
             if (profesional == null) {
-                throw new MiException("El profesional con ID " + id + " no existe");
+                throw new MiException("Profesional no encontrado");
             }
 
             return turnoRepository.findTurnosReservadosProfesional(profesional.getId());

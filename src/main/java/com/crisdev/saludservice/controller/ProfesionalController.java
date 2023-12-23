@@ -6,6 +6,7 @@ import com.crisdev.saludservice.exception.MiException;
 import com.crisdev.saludservice.model.HorarioLaboral;
 import com.crisdev.saludservice.model.Paciente;
 import com.crisdev.saludservice.model.Profesional;
+import com.crisdev.saludservice.model.Turno;
 import com.crisdev.saludservice.service.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,22 +81,18 @@ public class ProfesionalController {
         List<HorarioLaboral> horarios = horarioLaboralService.listarHorariosProfesional(profesional.getId());
         model.addAttribute("horarios", horarios);
 
-        if (profesional != null) {
-            if (error != null) {
-                model.put("error", error);
-            }
-            if (exito != null) {
-                model.put("exito", exito);
-            }
-
-            DiaSemana[] dias = DiaSemana.values();
-            model.addAttribute("dias", dias);
-
-            return "profesional_horario";
-        } else {
-            model.put("error", "No se encontró el perfil de profesional para el usuario logueado.");
-            return "profesional_horario";
+        if (error != null) {
+            model.put("error", error);
         }
+        if (exito != null) {
+            model.put("exito", exito);
+        }
+
+        DiaSemana[] dias = DiaSemana.values();
+        model.addAttribute("dias", dias);
+
+        return "profesional_horario";
+
     }
 
     @PostMapping("/horario/{id}")
@@ -112,7 +109,7 @@ public class ProfesionalController {
 
             profesionalService.agregarHorario(profesional, horario);
 
-            turnoService.generarTurnos(profesional.getId(), horario);
+            turnoService.generarTurnos(profesional, horario);
 
 
             redirectAttributes.addAttribute("exito", "Horario agregado con éxito");
@@ -146,7 +143,7 @@ public class ProfesionalController {
 
         Profesional profesional = (Profesional) session.getAttribute("usuariosession");
 
-        var turnos = turnoService.listarTurnosReservados(profesional.getId());
+        List<Turno> turnos = turnoService.listarTurnosReservados(profesional);
         modelMap.addAttribute("turnos", turnos);
 
         return "profesional_citas";
