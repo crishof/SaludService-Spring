@@ -28,12 +28,6 @@
         <a class="btn btn-primary" th:href="@{/paciente/listarConsultas}">Mis consultas</a>
     </div>
 
-
-    <div th:if="${session.usuariosession != null}">
-        <h2>FOTO DE PERFIL</h2>
-        <img class="logo" th:src="@{/imagen/perfil/__${session.usuariosession.id}__}" alt=""
-             style="width: 100px; border-radius:50px">
-    </div>
 </div>
 <footer th:replace="../layout/footer :: footer"></footer>
 <script

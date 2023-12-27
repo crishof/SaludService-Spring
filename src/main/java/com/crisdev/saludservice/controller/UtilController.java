@@ -69,6 +69,12 @@ public class UtilController {
         profesional.setDiploma(null);
         profesional.setRol(Rol.PROFESIONAL);
 
+        long precioConsulta = random.nextLong(1000, 9999);
+        long redondeado = Math.round((float) precioConsulta / 100) * 100L;
+        profesional.setPrecioConsulta(redondeado);
+
+        profesional.setValoracion(random.nextInt(1, 5));
+
         profesional.setHorarioLaboral(crearHorario());
 
 

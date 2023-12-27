@@ -1,21 +1,60 @@
+.color1 {color: #205796;}
+.color2 {color: #2980c2;}
+.color3 {color: #74b9d6;}
+.color4 {color: #c5e8e8;}
+.color5 {color: #f3f3f3;}
+*{
+    font-family: 'Roboto', sans-serif;
 
+}
 body {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* 100% del viewport height */
     margin: 0;
+    background-color: #f3f3f3;
 }
 
 .main-content {
     flex: 1; /* Ocupa todo el espacio disponible */
 }
 
-footer {
+
+/* BOTONES */
+.btn-primary{
+
+    background-color: #2980c2;
+}
+.btn-primary :hover{
+    background-color: #205796;
+}
+
+.btn-outline-success{
+    border-color: #2980c2;
+    color: #2980c2;
+}
+button .btn-outline-success :hover{
+    background-color: #2980c2!important;
+    color: #f3f3f3;
+}
+
+/*TABLAS]*/
+
+table{
+    background-color: #c5e8e8;
+}
+
+
+
+footer, header, nav {
     flex-shrink: 0; /* No se encogerá */
+    background-color: #2980c2;
+    color: #f3f3f3;
 }
 
 a{
     text-decoration: none;
+    color: #f3f3f3;
 }
 
 /* ESTILOS DE LA VALORACION */

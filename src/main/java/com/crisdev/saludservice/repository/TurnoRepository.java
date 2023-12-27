@@ -18,5 +18,8 @@ public interface TurnoRepository extends JpaRepository<Turno, String> {
     @Query("SELECT t FROM Turno t WHERE t.profesional.id = :profesionalId AND t.disponible = false AND t.atendido = false")
     List<Turno> findTurnosReservadosProfesional(String profesionalId);
 
-    Page<Turno> findByDisponible(boolean disponible, PageRequest pageable);
+    // Método con ordenación por fecha ascendente
+    Page<Turno> findByDisponibleOrderByFechaAsc(boolean disponible, PageRequest pageable);
+
+    List<Turno> findAllByDisponible(boolean disponible);
 }

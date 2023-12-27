@@ -2,7 +2,6 @@
 <html
         xmlns="http://www.w3.org/1999/xhtml"
         xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
         lang="en"
 >
 
@@ -15,17 +14,11 @@
 
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-    <div class="container">
+    <div class="container m-5">
         <div class="card">
             <div class="card-header">
                 <h3>Inicia Sesión!</h3>
-                <div class="container">
-                    <div class="col">
-                        <div class="row">
-                            <p>Todavía no tienes cuenta? <a th:href="@{/registroPaciente}">Regístrate!</a></p>
-                        </div>
-                    </div>
-                </div>
+                <p>Todavía no tienes cuenta? <a th:href="@{/registroPaciente}">Regístrate!</a></p>
             </div>
             <div class="card-body">
                 <form th:action="@{/logincheck}" method="post">

@@ -94,7 +94,7 @@ public class TurnoService {
     public Page<Turno> listarTurnosDisponibles(PageRequest pageable) {
 
 
-        return turnoRepository.findByDisponible(true, pageable);
+        return turnoRepository.findByDisponibleOrderByFechaAsc(true, pageable);
 
     }
 

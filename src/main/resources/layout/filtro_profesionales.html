@@ -1,7 +1,5 @@
-<div th:fragment="filtro" class="container mt-4">
-    <form class="d-inline" id="miFormulario" th:action="@{/profesional/listarProfesionales}">
-        <div class="form-group mx-sm-3 m-2 ">
-
+<div th:fragment="filtro" class="container">
+    <form id="miFormulario" th:action="@{/profesional/listarProfesionales}">
             <label for="filtro">Especialidad:</label>
             <select name="especialidad" id="filtro" class="form-select">
                 <option th:if="${valorSeleccionado != null and valorSeleccionado != ''}" th:value="${valorSeleccionado}"
@@ -19,16 +17,12 @@
                         th:value="${ordenSeleccionado}"
                         th:selected="${ordenSeleccionado}"
                         th:text="${#strings.capitalize(ordenSeleccionado)}"></option>
-
                 <option th:unless="${ordenSeleccionado == 'apellido'}" value="apellido">Apellido</option>
                 <option th:unless="${ordenSeleccionado == 'nombre'}" value="nombre">Nombre</option>
                 <option th:unless="${ordenSeleccionado == 'especialidad' or (valorSeleccionado != null and valorSeleccionado != '')}"
                         value="especialidad">Especialidad
                 </option>
-
             </select>
-
-        </div>
     </form>
 </div>
 

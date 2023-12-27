@@ -10,39 +10,34 @@
 <body>
 <div class="main-content">
     <header th:replace="../layout/header :: header"></header>
+
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Solicitud de cita</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Profesional: <span
-                                th:text="${turno.profesional.apellido} + ', '+ ${turno.profesional.nombre}"></span></p>
-                        <p>Especialidad: <span th:text="${turno.profesional.especialidad}"></span></p>
-                        <p>Fecha: <span th:text="${turno.fecha}"></span></p>
-                        <p>Hora: <span th:text="${turno.hora}"></span></p>
-                        <p>Valor de la consulta: <span th:text="'$ ' + ${turno.profesional.precioConsulta}"></span></p>
-                        <div>
-                            <form th:action="@{/turno/confirmarTurno/__${turno.id}__}" method="post">
-                                <label>
-                                    <input hidden th:value="${turno.id}" name="id">
-                                </label>
-                                <button type="submit" class="btn btn-primary">Confirmar</button>
-                            </form>
-                            <a class="btn btn-secondary" th:href="@{/turno/verTurnos}">Volver</a>
-                        </div>
-                    </div>
-                </div>
 
+    <div class="container m-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Solicitud de cita</h3>
+            </div>
+            <div class="card-body">
+                <p>Profesional: <span
+                        th:text="${turno.profesional.apellido} + ', '+ ${turno.profesional.nombre}"></span></p>
+                <p>Especialidad: <span th:text="${turno.profesional.especialidad}"></span></p>
+                <p>Fecha: <span th:text="${turno.fecha}"></span></p>
+                <p>Hora: <span th:text="${turno.hora}"></span></p>
+                <p>Valor de la consulta: <span th:text="'$ ' + ${turno.profesional.precioConsulta}"></span></p>
+                <div>
+                    <form th:action="@{/turno/confirmarTurno/__${turno.id}__}" method="post">
+                        <label>
+                            <input hidden th:value="${turno.id}" name="id">
+                        </label>
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                    </form>
+                    <a class="btn btn-secondary" th:href="@{/turno/verTurnos}">Volver</a>
+                </div>
             </div>
         </div>
     </div>
-
-
 </div>
 <footer th:replace="../layout/footer :: footer"></footer>
 <script

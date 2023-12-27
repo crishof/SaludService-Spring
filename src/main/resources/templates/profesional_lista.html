@@ -9,71 +9,71 @@
 <body>
 <div class="main-content">
     <header th:replace="../layout/header :: header"></header>
-
     <div th:replace="../layout/msg_error_exito :: mensajeFragment(${exito}, ${error})"></div>
 
-    <div th:replace="../layout/filtro_profesionales :: filtro"></div>
-
-    <form class="d-flex" role="search" th:action="@{/profesional/buscarProfesional}">
-        <input class="form-control me-2" type="buscar" name="texto" placeholder="buscar" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Buscar</button>
-    </form>
-
     <div class="container">
-        <div class="text-center m-4">
-            <h3>Listado de Profesionales Activos</h3>
-        </div>
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col">Especialidad</th>
-                <th scope="col">Foto</th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Precio</th>
-                <th scope="col">Valoración</th>
-                <th scope="col">Horario</th>
-                <th scope="col">Provincia</th>
-                <th scope="col">Localidad</th>
-                <th scope="col">Acciones</th>
-            </tr>
-            </thead>
-            <tbody th:each="profesional : ${profesionales}">
-            <tr>
-                <td th:text="${profesional.especialidad}"></td>
-                <td>
-                    <img th:if="${profesional.fotoPerfil != null}"
-                         style="height: 50px;width: 50px; border-radius: 10px; object-fit:cover"
-                         class="logo" th:src="@{/imagen/perfil/__${profesional.id}__}"/>
-                </td>
-                <td th:text="${profesional.apellido}"></td>
-                <td th:text="${profesional.nombre}"></td>
-                <td th:text="'$ ' + ${profesional.precioConsulta}"></td>
-                <td>
-                    <p class="clasificacion">
+
+        <div th:replace="../layout/filtro_profesionales :: filtro"></div>
+
+        <form class="d-flex" role="search" th:action="@{/profesional/buscarProfesional}">
+            <input class="form-control" type="text" name="texto" placeholder="buscar" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <div class="container m-5">
+        <div class="card">
+            <div class="card-header">
+                <h3>Listado de Profesionales Activos</h3>
+                <table class="table table-hover shadow">
+                    <thead>
+                    <tr>
+                        <th scope="col">Especialidad</th>
+                        <th scope="col">Foto</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Valoración</th>
+                        <th scope="col">Horario</th>
+                        <th scope="col">Provincia</th>
+                        <th scope="col">Localidad</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody th:each="profesional : ${profesionales}">
+                    <tr>
+                        <td th:text="${profesional.especialidad}"></td>
+                        <td>
+                            <img th:if="${profesional.fotoPerfil != null}"
+                                 style="height: 50px;width: 50px; border-radius: 10px; object-fit:cover"
+                                 class="logo" th:src="@{/imagen/perfil/__${profesional.id}__}"/>
+                        </td>
+                        <td th:text="${profesional.apellido}"></td>
+                        <td th:text="${profesional.nombre}"></td>
+                        <td th:text="'$ ' + ${profesional.precioConsulta}"></td>
+                        <td>
+                            <p class="clasificacion">
     <span th:each="star : ${#numbers.sequence(1, 5)}">
         <span th:if="${star le profesional.valoracion}">
             <span style="color: orange;">★</span>
         </span>
         <span style="color: gray;" th:unless="${star le profesional.valoracion}">★</span>
     </span>
-                    </p>
+                            </p>
 
-                </td>
-                <td th:text="${profesional.horarioLaboral}"></td>
-                <td th:text="${profesional.ubicacion.provincia}"></td>
-                <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
-                <td>
-                    <a th:href="@{/turno/verTurnos}" class="btn btn-primary">Ver turnos</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <!--        <a class="btn btn-secondary" th:href="@{/}">Volver</a>-->
-
-        <button class="btn btn-secondary" onclick="goBack()">Volver</button>
-
-
+                        </td>
+                        <td th:text="${profesional.horarioLaboral}"></td>
+                        <td th:text="${profesional.ubicacion.provincia}"></td>
+                        <td th:text="${profesional.ubicacion.localidad}">Localidad</td>
+                        <td>
+                            <a th:href="@{/turno/verTurnos}" class="btn btn-primary">Ver turnos</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-secondary" onclick="goBack()">Volver</button>
+            </div>
+        </div>
     </div>
 </div>
 <footer th:replace="../layout/footer :: footer"></footer>
@@ -87,7 +87,7 @@
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
         crossorigin="anonymous"
 ></script>
-
 <div th:replace="../layout/filtro_profesionales :: filtroScript"></div>
+
 </body>
 </html>

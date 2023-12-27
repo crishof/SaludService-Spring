@@ -26,10 +26,10 @@ public class UtilService {
         if (dni == null) {
             throw new MiException("El dni no puede estar vacío");
         }
-        if (fecha.isEmpty()) {
+        if (fecha == null || fecha.isEmpty()) {
             throw new MiException("La fecha no puede estar vacía");
         }
-        if (email.isEmpty()) {
+        if (email == null || email.isEmpty()) {
             throw new MiException("El email no puede estar vacío");
         }
     }

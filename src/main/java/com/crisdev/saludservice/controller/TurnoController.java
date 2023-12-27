@@ -31,17 +31,15 @@ public class TurnoController {
         this.pacienteService = pacienteService;
     }
 
-
     @GetMapping("/verTurnos")
     public String verTurnos(ModelMap modelMap, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "15") int size) {
 
         PageRequest pageable = PageRequest.of(page, size);
         Page<Turno> turnos = turnoService.listarTurnosDisponibles(pageable);
-
         modelMap.addAttribute("turnos", turnos);
         return "turno_lista";
-
     }
+
 
     @GetMapping("/solicitar/{id}")
     public String solicitarTurno(@PathVariable String id, ModelMap modelMap) {
